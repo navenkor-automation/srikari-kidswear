@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Shop - LittleStar</title>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/shop-home.css}">
+    <style>
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .product-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>Our Products</h1>
+<div class="product-grid">
+    <div class="product-card" th:each="p : ${productList}">
+        <!-- shop-grid.html lo image tag deentho replace chey -->
+        <img th:src="@{${p.imageUrl != null ? p.imageUrl : '/uploads/img1.webp'}}" alt="Product Image">
+        <h3 th:text="${p.name}">Product Name</h3>
+        <p th:text="'₹' + ${p.price}">Price</p>
+        <!-- Link to the details page with ID parameter -->
+        <a th:href="@{'/product-details/' + ${p.id}}" class="view-details-link">View Details</a>
+    </div>
+</div>
+</body>
+</html>

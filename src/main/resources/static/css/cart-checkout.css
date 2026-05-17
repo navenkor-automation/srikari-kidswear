@@ -1,0 +1,56 @@
+/* --- CART & CHECKOUT PAGE STRUCTURE --- */
+.cart-wrapper {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.cart-items-panel {
+    flex: 2;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #fce4ec;
+}
+
+.order-summary-panel {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #fce4ec;
+    height: fit-content;
+}
+
+/* Form Controls Inside Billing Form */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+.form-control:focus {
+    border-color: #ff6bad;
+    box-shadow: 0 0 5px rgba(255, 107, 173, 0.2);
+}
+
+@media (max-width: 768px) {
+    .cart-wrapper {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Srikari's Kidswear Admin</title>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        function openEdit(id, name, price, qty, cat, imageUrl, isNewArrival) {
+            document.getElementById('editId').value = id;
+            document.getElementById('editName').value = name;
+            document.getElementById('editPrice').value = price;
+            document.getElementById('editQty').value = qty;
+            document.getElementById('editCat').value = cat;
+
+            // Checkbox value mappings binding
+            document.getElementById('editNewArrival').checked = (isNewArrival === 'true' || isNewArrival === true);
+
+            const preview = document.getElementById('editImgPreview');
+            if(imageUrl && imageUrl !== '') {
+                preview.src = imageUrl;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+
+            document.getElementById('editModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        function openDeleteModal(id) {
+            document.getElementById('confirmDeleteBtn').href = '/admin/delete?id=' + id;
+            document.getElementById('deleteModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="container" th:if="${session.isLoggedIn != null}">
+
+    <div class="admin-nav-bar" style="display: flex; justify-content: space-between; padding: 10px 20px; background: #2c3e50; border-radius: 8px; margin-bottom: 15px;">
+        <a th:href="@{/shop}" style="color: #ffd6e8; text-decoration: none; font-weight: 600; font-size: 14px;"><i class="fas fa-store"></i> View Main Shop Site</a>
+        <span style="color: white; font-size: 13px; opacity: 0.8;">Role: Super Admin Connected</span>
+    </div>
+
+    <div class="admin-header">
+        <div class="header-title">
+            <h1>✨ Srikari's Boutique Admin</h1>
+            <p>Welcome Admin! Manage your inventory records smoothly below.</p>
+        </div>
+        <a th:href="@{/login-page}" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="form-card">
+        <h4>➕ Add New Product</h4>
+        <form th:action="@{/admin/add}" method="post" enctype="multipart/form-data" class="form-container">
+            <input type="hidden" name="id" id="productId">
+            <input type="text" name="name" id="productName" placeholder="Item Name" required class="form-control" style="width: 15%;">
+            <input type="number" step="0.01" name="price" id="productPrice" placeholder="Price" required class="form-control" style="width: 10%;">
+            <input type="number" name="qty" id="productQty" placeholder="Qty" required class="form-control" style="width: 10%;">
+            <input type="text" name="cat" id="productCat" placeholder="Category" required class="form-control" style="width: 15%;">
+
+            <label style="display: flex; align-items: center; gap: 6px; font-weight: 600; color: #2c3e50; cursor: pointer; font-size: 14px;">
+                <input type="checkbox" name="newArrival" value="true" style="width: 17px; height: 17px;"> New Arrival?
+            </label>
+
+            <div class="file-input-wrapper">
+                <input type="file" name="imageFile" accept="image/*" class="file-input-styled">
+            </div>
+            <button type="submit" class="btn btn-pink">Add Item</button>
+        </form>
+    </div>
+
+    <div class="table-title-area">📦 Product Inventory Management Table</div>
+
+    <table class="inventory-table">
+        <thead>
+        <tr>
+            <th style="width: 20%;">Preview</th>
+            <th style="width: 20%;">Name</th>
+            <th style="width: 12%;">Price</th>
+            <th style="width: 8%;">Qty</th>
+            <th style="width: 15%;">Category</th>
+            <th style="width: 10%;">Status</th>
+            <th style="width: 15%;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${products}">
+            <td>
+                <img th:src="${p.imageUrl != null && p.imageUrl != '' ? p.imageUrl : 'https://via.placeholder.com/80'}"
+                     onerror="this.src='https://via.placeholder.com/80x100?text=No+Image'"
+                     style="width:60px; height:75px; object-fit:cover; border-radius:6px; border: 1px solid #eee;">
+            </td>
+            <td style="font-weight: 600; color: #2c3e50;" th:text="${p.name}">Product Name</td>
+            <td style="color: #27ae60; font-weight: bold;" th:text="'₹' + ${p.price}">₹0.00</td>
+            <td th:text="${p.quantity}">0</td>
+            <td>
+                <span class="badge" th:text="${p.category != null && p.category != '' ? p.category : 'General'}">Category</span>
+            </td>
+            <td>
+                <span th:if="${p.newArrival}" class="badge" style="background: #ffecf2; color: #ff6bad; border: 1px solid #ff6bad;">New Arrival</span>
+                <span th:unless="${p.newArrival}" style="color: #bdc3c7; font-size: 13px;">Normal</span>
+            </td>
+            <td>
+                <button type="button" class="btn btn-blue"
+                        th:data-id="${p.id}"
+                        th:data-name="${p.name}"
+                        th:data-price="${p.price}"
+                        th:data-qty="${p.quantity}"
+                        th:data-cat="${p.category}"
+                        th:data-img="${p.imageUrl}"
+                        th:data-na="${p.newArrival}"
+                        onclick="openEdit(this.getAttribute('data-id'), this.getAttribute('data-name'), this.getAttribute('data-price'), this.getAttribute('data-qty'), this.getAttribute('data-cat'), this.getAttribute('data-img'), this.getAttribute('data-na'))">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+
+                <button type="button" class="btn btn-red" th:data-id="${p.id}" onclick="openDeleteModal(this.getAttribute('data-id'))">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </button>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(products)}">
+            <td colspan="7" style="text-align: center; color: #95a5a6; padding: 30px; font-weight: bold;">Inventory is currently empty!</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination-container" th:if="${totalPages > 1}">
+        <a th:href="@{/admin/inventory(page=${currentPage - 1})}" class="page-link" th:classappend="${currentPage == 0} ? 'disabled' : ''">« Prev</a>
+        <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+           th:href="@{/admin/inventory(page=${i})}"
+           class="page-link" th:classappend="${currentPage == i} ? 'active' : ''" th:text="${i + 1}">1</a>
+        <a th:href="@{/admin/inventory(page=${currentPage + 1})}" class="page-link" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">Next »</a>
+    </div>
+
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Update Product Record</h3>
+            <button type="button" class="close-x" onclick="closeModal()">&times;</button>
+        </div>
+        <form th:action="@{/admin/add}" method="post" enctype="multipart/form-data">
+            <div class="modal-body">
+                <input type="hidden" name="id" id="editId">
+                <label><i class="fas fa-tag"></i> Product Name:</label>
+                <input type="text" name="name" id="editName" required style="width: 100%; box-sizing: border-box;">
+
+                <label><i class="fas fa-rupee-sign"></i> Price (INR):</label>
+                <input type="number" step="0.01" name="price" id="editPrice" required style="width: 100%; box-sizing: border-box;">
+
+                <label><i class="fas fa-boxes"></i> Stock Quantity:</label>
+                <input type="number" name="qty" id="editQty" required style="width: 100%; box-sizing: border-box;">
+
+                <label><i class="fas fa-list-alt"></i> Category:</label>
+                <input type="text" name="cat" id="editCat" required style="width: 100%; box-sizing: border-box;">
+
+                <label style="display: flex; align-items: center; gap: 8px; margin-top: 15px; margin-bottom: 15px; font-weight: bold; color: #2c3e50; cursor: pointer;">
+                    <input type="checkbox" name="newArrival" id="editNewArrival" value="true" style="width: 18px; height: 18px;"> Mark as New Arrival Item
+                </label>
+
+                <label><i class="fas fa-image"></i> Update Image (Optional):</label>
+                <input type="file" name="imageFile" accept="image/*" class="file-input-styled" style="width: 100%;" onchange="previewImage(this, 'editImgPreview')">
+
+                <div style="text-align: center; margin-top: 10px;">
+                    <img id="editImgPreview" src="#" alt="Preview" style="display: none; width: 70px; height: 90px; object-fit: cover; border-radius: 6px; margin: 0 auto; border: 1px solid #3498db;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="closeModal()" class="btn" style="background: #bdc3c7; color: white;">Cancel</button>
+                <button type="submit" class="btn btn-pink">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="deleteModal" class="modal">
+    <div class="modal-content" style="width: 400px; text-align: center; margin: 12% auto;">
+        <div class="modal-header" style="border-bottom: none; justify-content: center;">
+            <h3 style="color: #e74c3c; font-size: 22px;">⚠️ Are you sure?</h3>
+        </div>
+        <div class="modal-body" style="padding: 10px 0 20px 0; color: #34495e; font-size: 15px; line-height: 1.5;">
+            Do you really want to delete this product?<br>This action cannot be undone.
+        </div>
+        <div class="modal-footer" style="border-top: none; justify-content: center; gap: 15px; padding-top: 0;">
+            <button type="button" onclick="closeDeleteModal()" class="btn" style="background: #bdc3c7; color: white; padding: 10px 22px;">Cancel</button>
+            <a id="confirmDeleteBtn" href="#" class="btn btn-red" style="padding: 10px 22px;">Yes, Delete</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

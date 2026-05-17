@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Srikari Kidswear | Shop Collection</title>
+  <link rel="stylesheet" th:href="@{/css/global.css}">
+  <link rel="stylesheet" th:href="@{/css/shop-home.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* --- SHOP SPECIFIC STYLES --- */
+    .hero-banner {
+      background: linear-gradient(135deg, #ffeef4 0%, #ffd6e8 100%);
+      padding: 40px 20px;
+      text-align: center;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      border: 1px solid #fce4ec;
+    }
+    .hero-banner h1 { color: #d63384; font-size: 32px; font-weight: 800; margin-bottom: 10px; }
+    .hero-banner p { color: #666; font-size: 15px; }
+
+    /* Categories Section */
+    .categories-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 35px;
+      flex-wrap: wrap;
+    }
+    .cat-chip {
+      background: white;
+      padding: 10px 22px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #555;
+      cursor: pointer;
+      border: 2px solid #fce4ec;
+      transition: all 0.2s ease;
+    }
+    .cat-chip:hover, .cat-chip.active {
+      background: #ff6bad;
+      color: white;
+      border-color: #ff6bad;
+      box-shadow: 0 4px 10px rgba(255, 107, 173, 0.2);
+    }
+
+    /* Product Grid Layout */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 25px;
+      margin-bottom: 50px;
+    }
+    .grid-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+      border: 1px solid #fce4ec;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .grid-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(255, 107, 173, 0.1);
+    }
+    .img-wrapper {
+      width: 100%;
+      height: 280px;
+      overflow: hidden;
+      background: #fdfafb;
+    }
+    .img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .grid-card:hover .img-wrapper img {
+      transform: scale(1.04);
+    }
+    .card-info {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .card-info h4 {
+      font-size: 15px;
+      color: #333;
+      margin-bottom: 8px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 10px;
+    }
+    .price-tag {
+      font-size: 18px;
+      font-weight: 800;
+      color: #222;
+    }
+    .view-btn {
+      background: #ff6bad;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .view-btn:hover { background: #ad1457; }
+
+    .wishlist-icon {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      z-index: 10;
+    }
+    .wishlist-icon:hover { color: #ff6bad; }
+
+    /* Bootstrap Cards Compatibility Style */
+    .btn-pink { background-color: #ff6bad; color: white; border: none; font-weight: bold; }
+    .btn-pink:hover { background-color: #ad1457; color: white; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/shop" class="logo-link">srikarikidswear</a>
+  <div class="nav-actions">
+    <a href="javascript:void(0)" onclick="openTrackDrawer()" style="text-decoration:none; color:#555; font-size:12px; font-weight:700;">My Orders</a>
+    <div style="cursor:pointer; position:relative;">
+      <i class="fa-solid fa-bag-shopping" style="font-size:20px;"></i>
+      <span class="badge" id="globalCartBadge">0</span>
+    </div>
+    <i class="fa-regular fa-circle-user" style="font-size:20px;"></i>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="hero-banner">
+    <h1>Premium Kids Wear Collection</h1>
+    <p>Handpicked comfortable outfits with love for your little stars ✨</p>
+  </div>
+
+  <div class="categories-container">
+    <div class="cat-chip active" onclick="filterCategory('all', this)">All Outfits</div>
+    <div class="cat-chip" onclick="filterCategory('infants', this)">Infants (0-1Y)</div>
+    <div class="cat-chip" onclick="filterCategory('toddlers', this)">Toddlers (1-3Y)</div>
+    <div class="cat-chip" onclick="filterCategory('boys', this)">Boys Clothing</div>
+    <div class="cat-chip" onclick="filterCategory('girls', this)">Girls Dresses</div>
+  </div>
+
+  <div class="products-grid">
+    <div th:each="prod : ${products}" class="grid-card" th:data-category="${prod.category}">
+      <div class="wishlist-icon"><i class="fa-solid fa-heart"></i></div>
+      <div class="img-wrapper">
+        <img th:src="@{${prod.imageUrl}}" alt="Kidswear">
+      </div>
+      <div class="card-info">
+        <h4 th:text="${prod.name}">Beautiful Cotton Dress</h4>
+        <div style="color:#ff6bad; font-size:12px; margin-bottom:10px;">
+          <i class="fa-solid fa-star"></i> 4.5 <span style="color:#aaa;">(45)</span>
+        </div>
+        <div class="price-row">
+          <div class="price-tag">₹<span th:text="${prod.price}">499</span></div>
+          <a th:href="@{/product/{id}(id=${prod.id})}" class="view-btn">VIEW DETAILS</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 50px; border-top: 1px dashed #ddd; padding-top: 30px;">
+    <h2 style="text-align: center; color: #2c3e50; font-weight: bold; margin-bottom: 25px;">✨ New Arrivals ✨</h2>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+      <div style="flex: 0 0 calc(25% - 12px); min-width: 200px; max-width: 250px; border: 1px solid #ffecf2; border-radius: 12px; padding: 12px; text-align: center; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;" th:each="product : ${newArrivals}">
+
+        <div style="height: 200px; overflow: hidden; border-radius: 8px; background: #fafafa; margin-bottom: 10px;">
+          <img th:src="${product.imageUrl != null && product.imageUrl != '' ? product.imageUrl : 'https://via.placeholder.com/200x200?text=Srikari+Kids'}"
+               style="width: 100%; height: 100%; object-fit: cover;" alt="Product Image">
+        </div>
+
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <span style="background: #fff0f5; color: #ff6bad; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; text-transform: uppercase;" th:text="${product.category}">T-SHIRTS</span>
+            <h6 style="font-size: 14px; margin: 8px 0; font-weight: 600; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${product.name}">T-Shirts</h6>
+          </div>
+          <div>
+            <p style="color: #e74c3c; font-weight: bold; margin: 5px 0 10px 0; font-size: 16px;" th:text="'₹' + ${product.price}">₹160.0</p>
+            <a th:href="@{/product/{id}(id=${product.id})}" class="view-btn" style="display: block; text-align: center;">View Details</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function filterCategory(cat, element) {
+    document.querySelectorAll('.cat-chip').forEach(chip => chip.classList.remove('active'));
+    element.classList.add('active');
+
+    document.querySelectorAll('.grid-card').forEach(card => {
+      if (cat === 'all') {
+        card.style.display = 'flex';
+      } else {
+        const productCat = card.getAttribute('data-category');
+        if (productCat && productCat.toLowerCase() === cat.toLowerCase()) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      }
+    });
+  }
+
+  window.onload = function() {
+    document.getElementById('globalCartBadge').innerText = "0";
+  }
+</script>
+
+</body>
+</html>

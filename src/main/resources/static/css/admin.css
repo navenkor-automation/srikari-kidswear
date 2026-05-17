@@ -1,0 +1,198 @@
+/* --- ADMIN MANAGEMENT DASHBOARD STRUCTURAL SYSTEM --- */
+body {
+    background-color: #fcf8fa;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    border-bottom: 3px solid #ff6bad;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+.header-title h1 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin: 0;
+}
+.header-title p {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin: 5px 0 0 0;
+}
+
+/* Form Styles */
+.form-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+.form-card h4 {
+    margin-top: 0;
+    color: #d63384;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+.form-container input[type="text"],
+.form-container input[type="number"],
+.modal-body input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+.form-container input:focus,
+.modal-body input:focus {
+    border-color: #ff6bad;
+}
+
+/* Inventory Table */
+.table-title-area {
+    font-weight: 700;
+    font-size: 16px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    margin-bottom: 25px;
+}
+.inventory-table th,
+.inventory-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #f5f5f5;
+}
+.inventory-table th {
+    background-color: #ffd6e8;
+    color: #d63384;
+    font-weight: 700;
+}
+
+/* Badges and Buttons Buttons */
+.badge {
+    background: #eef2f7;
+    color: #475569;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+.btn-pink { background: #ff6bad; color: white; }
+.btn-blue { background: #3498db; color: white; }
+.btn-red { background: #e74c3c; color: white; }
+.btn-logout { background: #2c3e50; color: white; }
+
+/* Pagination system */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+.page-link {
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.page-link.active {
+    background: #ff6bad;
+    color: white;
+    border-color: #ff6bad;
+}
+.page-link.disabled {
+    color: #ccc;
+    pointer-events: none;
+    background: #f5f5f5;
+}
+
+/* MODAL WINDOW SYSTEM CODES */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+    background-color: white;
+    margin: 8% auto;
+    padding: 0;
+    border-radius: 12px;
+    width: 500px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+.modal-header {
+    padding: 15px 20px;
+    background: #ffd6e8;
+    color: #d63384;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-header h3 { margin: 0; font-size: 18px; }
+.close-x {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #d63384;
+    cursor: pointer;
+}
+.modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.modal-body label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #444;
+}
+.modal-footer {
+    padding: 15px 20px;
+    background: #f9f9f9;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #eee;
+}

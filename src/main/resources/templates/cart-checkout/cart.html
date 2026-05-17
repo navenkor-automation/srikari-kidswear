@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BABYKIDS | Your Cart</title>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/cart-checkout.css}">
+    <style>
+        .cart-container { max-width: 900px; margin: 30px auto; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .cart-header { border-bottom: 2px solid #fce4ec; padding-bottom: 15px; margin-bottom: 20px; }
+        .cart-item { display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid #eee; }
+        .cart-img { width: 100px; height: 120px; object-fit: cover; border-radius: 8px; }
+        .item-details { flex: 1; margin-left: 20px; }
+        .item-price { text-align: right; min-width: 120px; }
+        .price-value { font-weight: bold; font-size: 18px; color: #333; display: block; }
+        .qty-btn { background: #f0f0f0; border: none; padding: 5px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .action-link { background: none; border: none; color: #ad1457; cursor: pointer; font-weight: bold; font-size: 12px; padding: 0; margin-right: 10px; text-decoration: none; }
+        .total-section { margin-top: 30px; text-align: right; border-top: 2px solid #fce4ec; padding-top: 20px; }
+        .checkout-btn { background: #ff6bad; color: white; border: none; padding: 15px 40px; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 16px; width: 100%; }
+
+        /* Modal Styles */
+        .modal {
+            display:none;
+            position:fixed;
+            z-index:2000;
+            left:0;
+            top:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,0.6);
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .modal-content {
+            background:white;
+            margin: 5vh auto;
+            padding:25px;
+            width:90%;
+            max-width:350px;
+            border-radius:20px;
+            text-align:center;
+            position:relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .share-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .share-option { cursor: pointer; transition: transform 0.2s; }
+        .share-option:hover { transform: scale(1.1); }
+        .share-icon { font-size: 30px; display: block; margin-bottom: 5px; }
+
+        .close-modal-btn {
+            margin-top: 25px;
+            background: #fce4ec;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            color: #ad1457;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body style="background-color: #fff5f8; margin: 0;">
+
+<header style="background: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fce4ec; position: sticky; top: 0; z-index: 1000;">
+    <div style="flex: 1;">    <a href="/shop" class="logo-link">BABYKIDS</a></div>
+
+    <div style="flex: 2; text-align: center;"><h1 style="color: #ad1457; margin: 0; font-size: 22px;">BabyKids</h1></div>
+
+    <div style="flex: 1; text-align: right; padding-right: 20px;">
+        <a href="/cart" style="text-decoration: none; position: relative; font-size: 24px;">
+            🛒 <span th:text="${cartCount}" style="position: absolute; top: -8px; right: -10px; background: #ff6bad; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; font-weight: bold;">0</span>
+        </a>
+    </div>
+    <!-- Inside cart.html near the top or bottom of the cart table -->
+    <div class="cart-navigation" style="margin-bottom: 15px;">
+        <a href="/order/history" style="color: #ff6bad; text-decoration: none; border: 1px solid #ff6bad; padding: 5px 10px; border-radius: 15px;">
+            📦View Past Orders
+        </a>
+    </div>
+</header>
+
+<div class="cart-container">
+    <div class="cart-header">
+        <h2>Your Shopping Bag</h2>
+    </div>
+
+    <div th:if="${#lists.isEmpty(cartItems)}" class="empty-msg" style="text-align: center; padding: 40px;">
+        <p>Your bag is currently empty.</p>
+        <a href="/shop" style="color: #ff6bad; font-weight: bold;">Go Shopping</a>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(cartItems)}">
+        <div th:each="item : ${cartItems}" class="cart-item">
+            <img th:src="${item.imageUrl}" class="cart-img" alt="Product Image">
+            <div class="item-details">
+                <h4 th:text="${item.name}" style="margin: 0 0 10px 0;">Product Name</h4>
+
+                <form th:action="@{/cart/update}" method="post" style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <input type="hidden" name="id" th:value="${item.id}">
+                    <button type="submit" name="action" value="decrease" class="qty-btn">-</button>
+                    <span th:text="${item.quantity}" style="margin: 0 15px; font-weight: bold;">1</span>
+                    <button type="submit" name="action" value="increase" class="qty-btn">+</button>
+                </form>
+
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <form th:action="@{/cart/remove}" method="post" style="margin:0;">
+                        <input type="hidden" name="id" th:value="${item.id}">
+                        <button type="submit" class="action-link">REMOVE</button>
+                    </form>
+                    <span style="color: #ccc;">|</span>
+                    <form th:action="@{/cart/save-for-later}" method="post" style="margin:0;">
+                        <input type="hidden" name="id" th:value="${item.id}">
+                        <button type="submit" class="action-link" style="color:#666;">SAVE FOR LATER</button>
+                    </form>
+                    <span style="color: #ccc;">|</span>
+                    <button th:data-name="${item.name}" th:data-img="${item.imageUrl}" onclick="openShare(this.getAttribute('data-name'), this.getAttribute('data-img'))" class="action-link" style="color:#666;">SHARE</button>
+                </div>
+            </div>
+            <div class="item-price">
+                <span class="price-value" th:text="'₹' + ${item.totalPrice}">₹0</span>
+                <small style="color: #999;" th:text="'(₹' + ${item.price} + ' each)'"></small>
+            </div>
+        </div>
+
+        <!-- Inside the total-section of cart.html -->
+        <!-- Final Total and Checkout Section -->
+        <div style="margin-top: 30px; border-top: 2px solid #fce4ec; padding-top: 25px; padding-bottom: 10px;">
+
+            <!-- Right-aligned Total Price -->
+            <div style="text-align: right; margin-bottom: 25px; padding-right: 10px;">
+                <h3 style="margin: 0; font-size: 26px; color: #ad1457; font-weight: bold;">
+                    Total: <span th:text="'₹' + ${total}">₹0</span>
+                </h3>
+            </div>
+
+            <!-- Centered and Constrained Checkout Button -->
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <a href="/checkout"
+                   class="checkout-btn"
+                   style="text-decoration: none;
+                  display: inline-block;
+                  text-align: center;
+                  background: #ff6bad;
+                  color: white;
+                  padding: 16px 0;
+                  border-radius: 35px;
+                  font-weight: bold;
+                  font-size: 16px;
+                  width: 90%;
+                  max-width: 450px;
+                  box-shadow: 0 4px 15px rgba(255, 107, 173, 0.4);
+                  transition: transform 0.2s ease;">
+                    PROCEED TO CHECKOUT
+                </a>
+            </div>
+        </div>
+</div>
+
+<!-- SAVE FOR LATER SECTION -->
+<div class="cart-container" th:unless="${#lists.isEmpty(savedItems)}" style="border: 1px dashed #ff6bad; background: #fffcfd;">
+    <div class="cart-header">
+        <h2 style="color: #666; font-size: 18px;">Saved for Later</h2>
+    </div>
+    <div th:each="item : ${savedItems}" class="cart-item" style="border-bottom: 1px solid #fce4ec;">
+        <img th:src="${item.imageUrl}" class="cart-img" style="filter: grayscale(30%); width: 80px; height: 100px;">
+        <div class="item-details">
+            <h4 th:text="${item.name}" style="margin: 0; color: #555;">Product Name</h4>
+            <div style="margin-top: 10px;">
+                <form th:action="@{/cart/move-to-bag}" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${item.id}">
+                    <button type="submit" class="action-link" style="color: #4caf50;">MOVE TO BAG</button>
+                </form>
+                <span style="color: #ccc;">|</span>
+                <form th:action="@{/cart/remove-saved}" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${item.id}">
+                    <button type="submit" class="action-link">REMOVE</button>
+                </form>
+            </div>
+        </div>
+        <div class="item-price">
+            <span class="price-value" style="font-size: 16px; color: #777;" th:text="'₹' + ${item.price}">₹0</span>
+        </div>
+    </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div id="shareModal" class="modal">
+    <div class="modal-content">
+        <span onclick="closeModal()" style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:24px; color:#999;">&times;</span>
+        <h3 id="modalTitle" style="color: #ad1457; margin-top: 0;">Share Product</h3>
+        <img id="modalImg" src="" style="width: 100px; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
+        <div class="share-grid">
+            <div class="share-option" onclick="shareTo('whatsapp')"><span class="share-icon">💬</span><small>WhatsApp</small></div>
+            <div class="share-option" onclick="shareTo('telegram')"><span class="share-icon">✈️</span><small>Telegram</small></div>
+            <div class="share-option" onclick="shareTo('email')"><span class="share-icon">✉️</span><small>Email</small></div>
+            <div class="share-option" onclick="copyUrl()"><span class="share-icon">🔗</span><small>Copy</small></div>
+        </div>
+        <button onclick="closeModal()" class="close-modal-btn">Close</button>
+    </div>
+</div>
+
+<script>
+    let currentProductName = "";
+
+    function openShare(name, img) {
+        currentProductName = name;
+        document.getElementById('modalTitle').innerText = "Share " + name;
+        document.getElementById('modalImg').src = img;
+        document.getElementById('shareModal').style.display = "block";
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+        document.getElementById('shareModal').style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
+    function copyUrl() {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+    }
+
+    function shareTo(platform) {
+        const url = window.location.href;
+        const text = "Check out this beautiful item from Babylicious: " + currentProductName;
+        let finalLink = "";
+
+        switch(platform) {
+            case 'whatsapp': finalLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + " " + url)}`; break;
+            case 'telegram': finalLink = `https://t.me/share/url?url=${url}&text=${encodeURIComponent(text)}`; break;
+            case 'email': finalLink = `mailto:?subject=${currentProductName}&body=${text} ${url}`; break;
+        }
+        if (finalLink) window.open(finalLink, '_blank');
+    }
+
+    window.onclick = function(event) {
+        let modal = document.getElementById('shareModal');
+        if (event.target == modal) closeModal();
+    }
+</script>
+
+</body>
+</html>

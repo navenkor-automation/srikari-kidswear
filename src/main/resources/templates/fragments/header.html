@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- This attribute allows other pages to 'find' this code -->
+<header th:fragment="header" class="main-header">
+    <nav style="background-color: #ffffff; padding: 10px 30px; border-bottom: 2px solid #fce4ec; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+
+        <!-- Logo Section -->
+        <div class="logo">
+            <a th:href="@{/all-products}" style="font-size: 28px; font-weight: 900; color: #ff6bad; text-decoration: none; letter-spacing: -1px;">
+                Srikari<span style="color: #333;">Kidswear</span>
+            </a>
+        </div>
+
+        <!-- Navigation Links -->
+        <ul style="list-style: none; display: flex; gap: 30px; margin: 0; align-items: center; font-weight: 500;">
+            <li><a th:href="@{/all-products}" style="text-decoration: none; color: #444; transition: 0.3s;">Shop</a></li>
+            <li><a href="#" style="text-decoration: none; color: #444;">Track Order</a></li>
+
+            <!-- Cart Icon with Badge -->
+            <li style="position: relative;">
+                <a th:href="@{/cart}" style="text-decoration: none; color: #333; font-size: 22px;">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <!-- This ID 'cartCount' is what your JS targets -->
+                    <span id="cartCount" class="cart-count-badge"
+                          style="position: absolute; top: -10px; right: -12px; background: #ff6bad; color: white;
+                                 font-size: 11px; padding: 2px 6px; border-radius: 50%; font-weight: bold; border: 2px solid white;">
+                        0
+                    </span>
+                </a>
+            </li>
+
+            <!-- Profile Icon -->
+            <li>
+                <a href="#" style="text-decoration: none; color: #333; font-size: 20px;">
+                    <i class="fa-regular fa-user"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Optional: Sub-header for Search (Like Amazon/FirstCry) -->
+    <div style="background: #fff; padding: 10px 30px; display: flex; justify-content: center; border-bottom: 1px solid #eee;">
+        <div style="width: 50%; position: relative;">
+            <input type="text" placeholder="Search for dresses, toys, diapers..."
+                   style="width: 100%; padding: 8px 15px; border: 1px solid #ddd; border-radius: 20px; outline: none;">
+            <i class="fa fa-search" style="position: absolute; right: 15px; top: 12px; color: #888;"></i>
+        </div>
+    </div>
+</header>
+</body>
+</html>
