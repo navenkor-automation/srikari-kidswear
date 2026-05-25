@@ -2,180 +2,334 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Srikari Kidswear | Shop Collection</title>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='50' fill='%23ff6bad'/><text x='50%25' y='68%25' font-size='60' font-weight='900' font-family='Arial, sans-serif' fill='white' text-anchor='middle'>S</text></svg>">
+
   <link rel="stylesheet" th:href="@{/css/global.css}">
   <link rel="stylesheet" th:href="@{/css/shop-home.css}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    /* --- SHOP SPECIFIC STYLES --- */
-    .hero-banner {
-      background: linear-gradient(135deg, #ffeef4 0%, #ffd6e8 100%);
-      padding: 40px 20px;
-      text-align: center;
-      border-radius: 15px;
-      margin-bottom: 30px;
-      border: 1px solid #fce4ec;
+    /* --- GLOBAL LAYOUT FIX --- */
+    html, body {
+      margin: 0; padding: 0;
+      touch-action: manipulation;
+      background-color: #fdfafb;
     }
-    .hero-banner h1 { color: #d63384; font-size: 32px; font-weight: 800; margin-bottom: 10px; }
-    .hero-banner p { color: #666; font-size: 15px; }
 
-    /* Categories Section */
-    .categories-container {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 35px;
-      flex-wrap: wrap;
-    }
-    .cat-chip {
+    /* --- AJIO PRO FULL-WIDTH HEADER STYLES --- */
+    header {
       background: white;
-      padding: 10px 22px;
-      border-radius: 25px;
+      border-bottom: 1px solid #f3f3f3;
+      position: sticky; top: 0; z-index: 1000;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+      padding: 12px 40px;
+    }
+
+    .header-container { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .header-left { display: flex; align-items: center; gap: 35px; }
+
+    .logo-link {
+      font-size: 24px; font-weight: 900; color: #222; text-decoration: none;
+      text-transform: uppercase; letter-spacing: 1.5px;
+    }
+    .logo-link span { color: #ff6bad; }
+
+    /* --- DESKTOP NAVIGATION MENU --- */
+    .main-nav { display: flex; align-items: center; gap: 25px; }
+    .nav-item { position: relative; }
+    .nav-item > a {
+      display: block; padding: 10px 0; font-size: 14px; font-weight: 700;
+      color: #333; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .nav-item:hover > a { color: #ff6bad; }
+
+    .dropdown-menu {
+      display: none; position: absolute; top: 100%; left: -50px; background: white; width: 240px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08); border: 1px solid #f0f0f0; border-radius: 6px; padding: 15px 0; z-index: 2000;
+    }
+    .nav-item:hover .dropdown-menu { display: block; }
+    .dropdown-menu ul { list-style: none; padding: 0; margin: 0; }
+    .dropdown-menu ul li a {
+      display: block; padding: 10px 20px; font-size: 13px; color: #555; text-decoration: none; font-weight: 600;
+    }
+    .dropdown-menu ul li a:hover { background: #fff5f8; color: #ff6bad; }
+
+    /* --- SEARCH BAR ENGINE --- */
+    .desktop-search-wrapper { position: relative; width: 320px; }
+    .search-form { display: flex; align-items: center; background: #f5f5f5; border-radius: 30px; padding: 6px 15px; border: 1px solid transparent; }
+    .search-form:focus-within { background: white; border-color: #ff6bad; box-shadow: 0 0 8px rgba(255, 107, 173, 0.15); }
+
+    .search-input { border: none; background: transparent; outline: none; width: 100%; font-size: 16px !important; color: #333; }
+    .search-btn { border: none; background: transparent; color: #777; cursor: pointer; }
+
+    /* --- AI SEARCH BOX --- */
+    .ai-search-dropdown {
+      display: none; position: absolute; top: 110%; left: 0; width: 100%; background: white;
+      border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #eee; padding: 15px; box-sizing: border-box; z-index: 3000;
+    }
+    .ai-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #999; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+    .ai-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+    .ai-chip { font-size: 12px; background: #f9f9f9; color: #555; padding: 4px 10px; border-radius: 15px; cursor: pointer; font-weight: 500; border: 1px solid #eee; }
+    .ai-chip:hover { background: #fff0f5; color: #ff6bad; border-color: #ff6bad; }
+    .history-list { list-style: none; padding: 0; margin: 0; }
+    .history-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #555; padding: 6px 0; cursor: pointer; }
+    .clear-history-btn { font-size: 10px; color: #aaa; cursor: pointer; text-transform: uppercase; }
+
+    /* --- HEADER RIGHT ACTIONS (SPACE & SOFT LOOK) --- */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .cart-wrapper { cursor: pointer; position: relative; color: #333; display: flex; align-items: center; }
+    .cart-wrapper:hover { color: #ff6bad; }
+    .badge { position: absolute; top: -10px; right: -10px; background: #ff6bad; color: white; font-size: 10px; font-weight: bold; border-radius: 50%; padding: 3px 6px; }
+
+    .user-session-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 28px;
       font-size: 14px;
       font-weight: 600;
-      color: #555;
-      cursor: pointer;
-      border: 2px solid #fce4ec;
-      transition: all 0.2s ease;
-    }
-    .cat-chip:hover, .cat-chip.active {
-      background: #ff6bad;
-      color: white;
-      border-color: #ff6bad;
-      box-shadow: 0 4px 10px rgba(255, 107, 173, 0.2);
     }
 
-    /* Product Grid Layout */
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 25px;
-      margin-bottom: 50px;
-    }
-    .grid-card {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-      border: 1px solid #fce4ec;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    .grid-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(255, 107, 173, 0.1);
-    }
-    .img-wrapper {
-      width: 100%;
-      height: 280px;
-      overflow: hidden;
-      background: #fdfafb;
-    }
-    .img-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s;
-    }
-    .grid-card:hover .img-wrapper img {
-      transform: scale(1.04);
-    }
-    .card-info {
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-    .card-info h4 {
-      font-size: 15px;
-      color: #333;
-      margin-bottom: 8px;
+    .logout-btn {
+      text-decoration: none;
+      color: #666;
       font-weight: 600;
-      line-height: 1.3;
-    }
-    .price-row {
-      display: flex;
-      justify-content: space-between;
+      font-size: 13px;
+      display: inline-flex;
       align-items: center;
-      margin-top: auto;
-      padding-top: 10px;
+      gap: 6px;
+      transition: color 0.2s ease;
+      padding: 4px 8px;
     }
-    .price-tag {
-      font-size: 18px;
+    .logout-btn:hover {
+      color: #e74c3c;
+    }
+
+    .mobile-sub-header { display: none; }
+
+    /* --- NEW ARRIVALS TEXT SECTION STYLING --- */
+    .section-heading {
+      margin: 45px 0 20px 0;
+      font-size: 22px;
       font-weight: 800;
       color: #222;
-    }
-    .view-btn {
-      background: #ff6bad;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-    .view-btn:hover { background: #ad1457; }
-
-    .wishlist-icon {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: white;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: #aaa;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      z-index: 10;
+      gap: 8px;
+    }
+    .section-heading span {
+      background: #ff6bad;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    /* --- PRODUCTS GRID & CARD --- */
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; margin-bottom: 80px; }
+    .grid-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid #fce4ec; display: flex; flex-direction: column; position: relative; }
+    .img-wrapper { width: 100%; height: 280px; overflow: hidden; background: #fdfafb; position: relative; }
+    .img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+    .wishlist-icon {
+      position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.9);
+      width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: #aaa; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 15;
     }
     .wishlist-icon:hover { color: #ff6bad; }
 
-    /* Bootstrap Cards Compatibility Style */
-    .btn-pink { background-color: #ff6bad; color: white; border: none; font-weight: bold; }
-    .btn-pink:hover { background-color: #ad1457; color: white; }
+    .card-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
+    .card-info h4 { margin: 0 0 5px 0; font-size: 15px; color: #333; font-weight: 700; }
+    .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .price-tag { font-size: 18px; font-weight: 800; color: #222; }
+    .view-btn { background: #ff6bad; color: white; padding: 8px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; text-decoration: none; }
+
+    /* --- AJIO PRO FIXED APP-STYLE BOTTOM NAV --- */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: white;
+      height: 60px;
+      box-shadow: 0 -3px 15px rgba(0,0,0,0.06);
+      border-top: 1px solid #f2f2f2;
+      z-index: 5000;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      gap: 4px;
+      flex: 1;
+    }
+    .bottom-nav-item i { font-size: 18px; color: #555; }
+    .bottom-nav-item.active { color: #ff6bad; }
+    .bottom-nav-item.active i { color: #ff6bad; }
+
+    /* --- RESPONSIVE MOBILE VIEW --- */
+    @media (max-width: 900px) {
+      header { padding: 10px 15px !important; display: flex !important; flex-direction: column !important; gap: 8px !important; }
+      .header-left .main-nav, .desktop-search-wrapper { display: none !important; }
+      .header-container { display: flex !important; justify-content: space-between !important; align-items: center !important; width: 100% !important; }
+      .logo-link { font-size: 18px !important; letter-spacing: 0.5px; }
+      .header-right { gap: 16px !important; }
+      .user-session-wrapper { gap: 12px !important; }
+      .user-session-wrapper span { display: none !important; }
+      .logout-btn span { display: none !important; }
+      .logout-btn { padding: 4px; color: #666; }
+
+      .mobile-sub-header { display: flex !important; flex-direction: column !important; gap: 10px !important; width: 100% !important; border-top: 1px solid #f9f9f9; padding-top: 6px; }
+      .mobile-search-container { position: relative; width: 100% !important; }
+      .mobile-search-container .search-form { width: 100% !important; box-sizing: border-box; background: #f5f5f5; }
+
+      .mobile-nav-links { display: flex !important; justify-content: space-between !important; align-items: center !important; gap: 5px !important; width: 100% !important; }
+      .mobile-nav-links a {
+        flex: 1; text-align: center; font-size: 12px !important; font-weight: 700 !important; color: #333 !important;
+        text-decoration: none; text-transform: uppercase; background: #fff5f8; padding: 8px 4px !important; border-radius: 6px; white-space: nowrap !important; border: 1px solid #ffeef3;
+      }
+      .mobile-nav-links a i { margin-right: 4px; font-size: 11px; }
+
+      .mobile-bottom-nav { display: flex !important; }
+      .products-grid { margin-bottom: 95px; }
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <a href="/shop" class="logo-link">srikarikidswear</a>
-  <div class="nav-actions">
-    <a href="javascript:void(0)" onclick="openTrackDrawer()" style="text-decoration:none; color:#555; font-size:12px; font-weight:700;">My Orders</a>
-    <div style="cursor:pointer; position:relative;">
-      <i class="fa-solid fa-bag-shopping" style="font-size:20px;"></i>
-      <span class="badge" id="globalCartBadge">0</span>
+  <div class="header-container">
+    <div class="header-left">
+      <a href="/shop" class="logo-link">srikari<span>kids</span></a>
+
+      <nav class="main-nav">
+        <div class="nav-item">
+          <a href="/shop?category=infants">Infants</a>
+          <div class="dropdown-menu">
+            <ul>
+              <li><a href="/shop?category=infants">Rompers & Onesies</a></li>
+              <li><a href="/shop?category=infants">2-Piece Sets</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="/shop?category=boys">Boys</a>
+          <div class="dropdown-menu">
+            <ul>
+              <li><a href="/shop?category=boys">Shirts & T-Shirts</a></li>
+              <li><a href="/shop?category=boys">Jeans & Trousers</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="/shop?category=girls">Girls</a>
+          <div class="dropdown-menu">
+            <ul>
+              <li><a href="/shop?category=girls">Dresses & Frocks</a></li>
+              <li><a href="/shop?category=girls">Tops & Tunics</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
     </div>
-    <i class="fa-regular fa-circle-user" style="font-size:20px;"></i>
+
+    <div class="desktop-search-wrapper">
+      <form action="/shop" method="get" class="search-form" onsubmit="handleSearchSubmit('searchInput')">
+        <input type="text" id="searchInput" name="search" class="search-input" placeholder="Search for dresses, brands..." autocomplete="off" th:value="${param.search}">
+        <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+
+      <div class="ai-search-dropdown" id="aiSearchBox">
+        <div class="ai-section-title"><i class="fa-solid fa-wand-magic-sparkles" style="color:#ff6bad;"></i> Trending AI Searches</div>
+        <div class="ai-tags">
+          <div class="ai-chip" onclick="applySearchTag('Frocks', 'searchInput')">Frocks</div>
+          <div class="ai-chip" onclick="applySearchTag('Cotton T-shirts', 'searchInput')">Cotton T-shirts</div>
+          <div class="ai-chip" onclick="applySearchTag('Rompers', 'searchInput')">Rompers</div>
+        </div>
+        <div id="recentSearchSection">
+          <div class="ai-section-title" style="justify-content: space-between;">
+            <span>Recent Searches</span>
+            <span class="clear-history-btn" onclick="clearSearchHistory()">Clear All</span>
+          </div>
+          <ul class="history-list" id="historyList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="cart-wrapper">
+        <i class="fa-solid fa-bag-shopping" style="font-size:19px;"></i>
+        <span class="badge" id="globalCartBadge">0</span>
+      </div>
+
+      <div class="user-session-wrapper">
+        <div th:if="${loggedInUser == null}" style="display: flex; align-items: center; gap: 5px;">
+          <i class="fa-regular fa-circle-user" style="font-size:18px; color: #555;"></i>
+          <a th:href="@{/login}" style="text-decoration: none; color: #555; font-weight: 700;">Sign In</a>
+        </div>
+
+        <div th:if="${loggedInUser != null}" style="display: flex; align-items: center; gap: 28px;">
+          <span style="color: #ff6bad; font-weight: 700;" th:text="'Hi, ' + ${loggedInUser}">User</span>
+
+          <a th:href="@{/account}" style="text-decoration: none; color: #2c4152; font-weight: 700; display: flex; align-items: center; gap: 5px;">
+            <i class="fa-solid fa-user-gear" style="font-size: 15px;"></i> <span>My Account</span>
+          </a>
+
+          <a th:href="@{/logout}" class="logout-btn" title="Logout">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Logout</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-sub-header">
+    <div class="mobile-search-container">
+      <form action="/shop" method="get" class="search-form" onsubmit="handleSearchSubmit('mobileSearchInput')">
+        <input type="text" id="mobileSearchInput" name="search" class="search-input" placeholder="Search clothes, brands..." autocomplete="off" th:value="${param.search}">
+        <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+
+      <div class="ai-search-dropdown" id="mobileAiSearchBox" style="width:100%;">
+        <div class="ai-section-title"><i class="fa-solid fa-wand-magic-sparkles" style="color:#ff6bad;"></i> Trending AI Searches</div>
+        <div class="ai-tags">
+          <div class="ai-chip" onclick="applySearchTag('Frocks', 'mobileSearchInput')">Frocks</div>
+          <div class="ai-chip" onclick="applySearchTag('Cotton T-shirts', 'mobileSearchInput')">Cotton T-shirts</div>
+          <div class="ai-chip" onclick="applySearchTag('Rompers', 'mobileSearchInput')">Rompers</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-nav-links">
+      <a href="/shop?category=infants"><i class="fa-solid fa-baby" style="color:#ff6bad;"></i> Infants</a>
+      <a href="/shop?category=boys"><i class="fa-solid fa-child" style="color:#3498db;"></i> Boys</a>
+      <a href="/shop?category=girls"><i class="fa-solid fa-child-dress" style="color:#e91e63;"></i> Girls</a>
+    </div>
   </div>
 </header>
 
-<div class="container">
-
-  <div class="hero-banner">
-    <h1>Premium Kids Wear Collection</h1>
-    <p>Handpicked comfortable outfits with love for your little stars ✨</p>
-  </div>
-
-  <div class="categories-container">
-    <div class="cat-chip active" onclick="filterCategory('all', this)">All Outfits</div>
-    <div class="cat-chip" onclick="filterCategory('infants', this)">Infants (0-1Y)</div>
-    <div class="cat-chip" onclick="filterCategory('toddlers', this)">Toddlers (1-3Y)</div>
-    <div class="cat-chip" onclick="filterCategory('boys', this)">Boys Clothing</div>
-    <div class="cat-chip" onclick="filterCategory('girls', this)">Girls Dresses</div>
-  </div>
+<div class="container" style="padding: 0 20px; margin-top: 20px;">
 
   <div class="products-grid">
     <div th:each="prod : ${products}" class="grid-card" th:data-category="${prod.category}">
-      <div class="wishlist-icon"><i class="fa-solid fa-heart"></i></div>
       <div class="img-wrapper">
+        <div class="wishlist-icon"><i class="fa-solid fa-heart"></i></div>
         <img th:src="@{${prod.imageUrl}}" alt="Kidswear">
       </div>
       <div class="card-info">
@@ -191,55 +345,108 @@
     </div>
   </div>
 
-  <div style="margin-top: 50px; border-top: 1px dashed #ddd; padding-top: 30px;">
-    <h2 style="text-align: center; color: #2c3e50; font-weight: bold; margin-bottom: 25px;">✨ New Arrivals ✨</h2>
+  <h3 class="section-heading"><i class="fa-solid fa-fire" style="color: #ff6bad;"></i> New Arrivals <span>Fresh</span></h3>
 
-    <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
-      <div style="flex: 0 0 calc(25% - 12px); min-width: 200px; max-width: 250px; border: 1px solid #ffecf2; border-radius: 12px; padding: 12px; text-align: center; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;" th:each="product : ${newArrivals}">
-
-        <div style="height: 200px; overflow: hidden; border-radius: 8px; background: #fafafa; margin-bottom: 10px;">
-          <img th:src="${product.imageUrl != null && product.imageUrl != '' ? product.imageUrl : 'https://via.placeholder.com/200x200?text=Srikari+Kids'}"
-               style="width: 100%; height: 100%; object-fit: cover;" alt="Product Image">
-        </div>
-
-        <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <span style="background: #fff0f5; color: #ff6bad; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; text-transform: uppercase;" th:text="${product.category}">T-SHIRTS</span>
-            <h6 style="font-size: 14px; margin: 8px 0; font-weight: 600; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${product.name}">T-Shirts</h6>
-          </div>
-          <div>
-            <p style="color: #e74c3c; font-weight: bold; margin: 5px 0 10px 0; font-size: 16px;" th:text="'₹' + ${product.price}">₹160.0</p>
-            <a th:href="@{/product/{id}(id=${product.id})}" class="view-btn" style="display: block; text-align: center;">View Details</a>
-          </div>
-        </div>
-
-      </div>
+  <div class="products-grid" style="margin-bottom: 100px;">
+    <div style="grid-column: 1 / -1; color: #888; text-align: center; font-size: 14px; font-weight: 600; padding: 20px 0;">
+      No new items to display right now. Check back soon!
     </div>
   </div>
 
 </div>
 
-<script>
-  function filterCategory(cat, element) {
-    document.querySelectorAll('.cat-chip').forEach(chip => chip.classList.remove('active'));
-    element.classList.add('active');
+<div class="mobile-bottom-nav">
+  <a href="/shop" class="bottom-nav-item active">
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
+  </a>
+  <a href="/shop?filter=explore" class="bottom-nav-item">
+    <i class="fa-solid fa-compass"></i>
+    <span>Explore</span>
+  </a>
+  <a href="/shop?filter=trends" class="bottom-nav-item">
+    <i class="fa-solid fa-arrow-trend-up"></i>
+    <span>Trend</span>
+  </a>
+  <a href="/shop?filter=categories" class="bottom-nav-item">
+    <i class="fa-solid fa-grip"></i>
+    <span>Categories</span>
+  </a>
+  <a href="/account" class="bottom-nav-item">
+    <i class="fa-solid fa-user"></i>
+    <span>Account</span>
+  </a>
+</div>
 
-    document.querySelectorAll('.grid-card').forEach(card => {
-      if (cat === 'all') {
-        card.style.display = 'flex';
-      } else {
-        const productCat = card.getAttribute('data-category');
-        if (productCat && productCat.toLowerCase() === cat.toLowerCase()) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
+<script>
+  const desktopInput = document.getElementById('searchInput');
+  const mobileInput = document.getElementById('mobileSearchInput');
+  const desktopAiBox = document.getElementById('aiSearchBox');
+  const mobileAiBox = document.getElementById('mobileAiSearchBox');
+  const historyList = document.getElementById('historyList');
+
+  if(desktopInput) {
+    desktopInput.addEventListener('focus', () => { renderSearchHistory(); desktopAiBox.style.display = 'block'; });
+  }
+  if(mobileInput) {
+    mobileInput.addEventListener('focus', () => { mobileAiBox.style.display = 'block'; });
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.desktop-search-wrapper') && !e.target.closest('.mobile-search-container')) {
+      if(desktopAiBox) desktopAiBox.style.display = 'none';
+      if(mobileAiBox) mobileAiBox.style.display = 'none';
+    }
+  });
+
+  function handleSearchSubmit(inputId) {
+    const query = document.getElementById(inputId).value.trim();
+    if (query) {
+      let history = JSON.parse(localStorage.getItem('ai_search_history')) || [];
+      if (!history.includes(query)) {
+        history.unshift(query);
+        if (history.length > 5) history.pop();
+        localStorage.setItem('ai_search_history', JSON.stringify(history));
       }
-    });
+    }
+  }
+
+  function renderSearchHistory() {
+    let history = JSON.parse(localStorage.getItem('ai_search_history')) || [];
+    if (!historyList) return;
+    if (history.length === 0) {
+      historyList.innerHTML = '<li class="history-item" style="color:#aaa; font-size:12px;">No recent searches</li>';
+    } else {
+      historyList.innerHTML = '';
+      history.forEach(keyword => {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        li.innerHTML = `<span><i class="fa-solid fa-clock-rotate-left" style="color:#bbb; margin-right:8px;"></i> ${keyword}</span>`;
+        li.onclick = () => {
+          if(desktopInput) desktopInput.value = keyword;
+          if(mobileInput) mobileInput.value = keyword;
+          window.location.href = '/shop?search=' + encodeURIComponent(keyword);
+        };
+        historyList.appendChild(li);
+      });
+    }
+  }
+
+  function clearSearchHistory() {
+    localStorage.removeItem('ai_search_history');
+    renderSearchHistory();
+  }
+
+  function applySearchTag(tag, inputId) {
+    document.getElementById(inputId).value = tag;
+    handleSearchSubmit(inputId);
+    window.location.href = '/shop?search=' + encodeURIComponent(tag);
   }
 
   window.onload = function() {
-    document.getElementById('globalCartBadge').innerText = "0";
+    if(document.getElementById('globalCartBadge')) {
+      document.getElementById('globalCartBadge').innerText = "0";
+    }
   }
 </script>
 

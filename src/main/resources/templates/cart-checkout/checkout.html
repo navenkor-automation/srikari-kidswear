@@ -2,89 +2,92 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>LittleStar | Checkout</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Srikari Kidswear | Checkout</title>
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fff5f8; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #fff5f8; margin: 0; padding: 0; color: #333; }
 
-    header { background: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fce4ec; position: sticky; top: 0; z-index: 1000; }
-    .home-btn { text-decoration: none; font-size: 24px; color: #ad1457; }
+    header { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fce4ec; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+    .home-btn { text-decoration: none; font-size: 22px; color: #ff6bad; }
+    .logo-text { font-size: 20px; font-weight: 900; color: #ff6bad; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
 
-    /* Layout from previous fixes */
     .checkout-wrapper { max-width: 1100px; margin: 30px auto; display: flex; flex-wrap: wrap; gap: 30px; padding: 0 20px; align-items: flex-start; }
     .left-col { flex: 1.5; min-width: 350px; }
     .right-col { flex: 1; min-width: 300px; position: sticky; top: 100px; }
 
-    .section-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    h2 { color: #ad1457; border-bottom: 2px solid #fce4ec; padding-bottom: 10px; margin-top: 0; font-size: 1.2rem; }
+    .section-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 20px; border: 1px solid #fce4ec; }
+    h2 { color: #2c3e50; border-bottom: 2px solid #fdf0f4; padding-bottom: 10px; margin-top: 0; font-size: 1.1rem; font-weight: 700; }
 
     .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; font-size: 13px; }
-    input { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 8px; box-sizing: border-box; background: #fafafa; }
+    label { display: block; margin-bottom: 6px; font-weight: bold; color: #666; font-size: 13px; }
+    input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: #fafafa; font-size: 14px; outline: none; }
+    input:focus { border-color: #ff6bad; background: white; }
 
-    /* Payment Tab Alignment */
     .payment-tabs { display: flex; gap: 10px; margin-top: 15px; }
-    .tab { flex: 1; padding: 12px 5px; text-align: center; cursor: pointer; border: 1px solid #fce4ec; border-radius: 10px; background: #fffcfd; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .tab { flex: 1; padding: 12px 5px; text-align: center; cursor: pointer; border: 1px solid #fce4ec; border-radius: 10px; background: #fffcfd; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .tab input { display: none; }
-    .tab:has(input:checked) { border: 2px solid #ff6bad; background: white; box-shadow: 0 2px 8px rgba(255,107,173,0.2); }
+    .tab:has(input:checked) { border: 2px solid #ff6bad; background: white; box-shadow: 0 2px 8px rgba(255,107,173,0.15); }
 
     .method-label { font-size: 11px; font-weight: bold; color: #ad1457; margin-top: 5px; text-transform: uppercase; }
-    .payment-logo { height: 20px; object-fit: contain; margin-bottom: 2px; }
+    .payment-logo { height: 18px; object-fit: contain; margin-bottom: 2px; }
 
-    .order-summary-item { display: flex; justify-content: space-between; margin-bottom: 10px; color: #666; font-size: 14px; }
-    .total-row { border-top: 2px solid #fce4ec; padding-top: 15px; margin-top: 15px; font-weight: bold; font-size: 18px; color: #ad1457; }
+    .order-summary-item { display: flex; justify-content: space-between; margin-bottom: 12px; color: #555; font-size: 14px; }
+    .order-summary-item.discount { color: #4caf50; font-weight: 500; }
+    .total-row { border-top: 2px dashed #fce4ec; padding-top: 15px; margin-top: 15px; font-weight: bold; font-size: 18px; color: #ad1457; }
 
-    .place-order-btn { background: #ff6bad; color: white; border: none; padding: 16px; width: 100%; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 10px rgba(255,107,173,0.3); }
-    .back-link { display: block; text-align: center; margin-top: 15px; color: #ad1457; text-decoration: none; font-size: 13px; font-weight: bold; }
+    .place-order-btn { background: #ff6bad; color: white; border: none; padding: 16px; width: 100%; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 12px rgba(255,107,173,0.3); transition: 0.2s; }
+    .place-order-btn:hover { background: #e05595; }
+    .back-link { display: block; text-align: center; margin-top: 15px; color: #ff6bad; text-decoration: none; font-size: 13px; font-weight: bold; }
+    .back-link:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .checkout-wrapper { flex-direction: column; margin: 15px auto; padding: 0 12px; }
+      .left-col, .right-col { width: 100%; min-width: 100%; position: relative; top: 0; }
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <div style="flex: 1;"><a href="/shop" class="home-btn">🏠</a></div>
-  <div style="flex: 2; text-align: center;"><h1 style="color: #ad1457; margin: 0; font-size: 20px; letter-spacing: 1px;">LittleStar</h1></div>
+  <div style="flex: 1;"><a href="/cart" class="home-btn">←</a></div>
+  <div style="flex: 2; text-align: center;"><h1 class="logo-text">Srikari Kidswear</h1></div>
   <div style="flex: 1;"></div>
 </header>
 
 <div class="checkout-wrapper">
-  <!-- Left Column: Shipping & Payment -->
   <div class="left-col">
     <div class="section-box">
       <h2>Shipping Address</h2>
       <form id="checkoutForm" action="/order/confirm" method="post">
-        <!-- Full Name -->
         <div class="form-group">
           <label>Full Name</label>
-          <input type="text" name="fullName" placeholder="Naveen Kumar" required>
+          <input type="text" name="fullName" placeholder="Enter full name" required>
         </div>
 
-        <!-- Phone & Pincode Grid -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
           <div class="form-group">
-            <label>Phone</label>
-            <input type="tel" name="phone" placeholder="9876543210" required>
+            <label>Phone Number</label>
+            <input type="tel" name="phone" placeholder="10-digit mobile number" required>
           </div>
           <div class="form-group">
             <label>Pincode</label>
-            <input type="text" name="pincode" placeholder="500001" required>
+            <input type="text" name="pincode" placeholder="6-digit pincode" required>
           </div>
         </div>
 
-        <!-- Street Address -->
         <div class="form-group">
-          <label>Street Address</label>
-          <input type="text" name="address" placeholder="Flat No, Apartment Name, Area" required>
+          <label>Street Address / Flat No</label>
+          <input type="text" name="address" placeholder="Flat No, Building, Area, Colony" required>
         </div>
 
         <h2 style="margin-top: 35px;">Payment Method</h2>
         <div class="payment-tabs">
-          <!-- COD -->
           <label class="tab">
             <input type="radio" name="paymentType" value="COD" checked onclick="togglePayment('cod')">
             <span style="font-size: 20px;">📦</span>
             <div class="method-label">COD</div>
           </label>
 
-          <!-- UPI -->
           <label class="tab">
             <input type="radio" name="paymentType" value="UPI" onclick="togglePayment('upi')">
             <div style="display: flex; gap: 4px;">
@@ -93,7 +96,6 @@
             <div class="method-label">UPI</div>
           </label>
 
-          <!-- Cards -->
           <label class="tab">
             <input type="radio" name="paymentType" value="CARD" onclick="togglePayment('card')">
             <div style="display: flex; gap: 4px;">
@@ -104,10 +106,9 @@
           </label>
         </div>
 
-        <!-- Payment Detail Sections -->
-        <div style="padding: 20px; background: #fffcfd; border-radius: 12px; margin-top: 10px; border: 1px solid #fce4ec;">
+        <div style="padding: 20px; background: #fffcfd; border-radius: 12px; margin-top: 15px; border: 1px solid #fce4ec;">
           <div id="cod-fields">
-            <p style="color: #888; font-size: 13px; margin: 0;">Pay securely with cash or QR code at your doorstep.</p>
+            <p style="color: #666; font-size: 13px; margin: 0;">Pay securely with cash or QR code at your doorstep.</p>
           </div>
 
           <div id="upi-fields" style="display: none;">
@@ -116,7 +117,7 @@
               <img src="https://download.logo.wine/logo/PhonePe/PhonePe-Logo.wine.png" style="height: 30px; cursor: pointer;">
               <img src="https://download.logo.wine/logo/Google_Pay/Google_Pay-Logo.wine.png" style="height: 30px; cursor: pointer;">
             </div>
-            <input type="text" name="upiId" placeholder="Enter UPI ID (e.g. naveen@okaxis)">
+            <input type="text" name="upiId" placeholder="Enter UPI ID (e.g. name@okaxis)">
           </div>
 
           <div id="card-fields" style="display: none;">
@@ -131,27 +132,27 @@
     </div>
   </div>
 
-  <!-- Right Column: Summary -->
   <div class="right-col">
     <div class="section-box">
       <h2>Order Summary</h2>
       <div th:each="item : ${cartItems}" style="display: flex; gap: 12px; margin-bottom: 15px; align-items: center;">
-        <img th:src="${item.imageUrl}" style="width: 45px; height: 55px; object-fit: cover; border-radius: 6px; border: 1px solid #fce4ec;">
-        <div style="flex: 1;">
-          <div style="font-weight: 600; font-size: 13px; color: #333;" th:text="${item.name}">Product</div>
-          <div style="font-size: 11px; color: #999;" th:text="'Qty: ' + ${item.quantity}">Qty: 1</div>
+        <img th:src="${item.imageUrl}" style="width: 45px; height: 55px; object-fit: cover; border-radius: 6px; border: 1px solid #fce4ec; flex-shrink: 0;">
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-weight: 600; font-size: 13px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${item.name}">Product</div>
+          <div style="font-size: 12px; color: #777; margin-top: 2px;" th:text="'Qty: ' + ${item.quantity} + ' | Size: ' + ${item.size != null ? item.size : 'N/A'}">Qty: 1</div>
         </div>
-        <div style="font-weight: bold; font-size: 14px; color: #333;" th:text="'₹' + ${item.totalPrice}">₹0</div>
+        <div style="font-weight: bold; font-size: 14px; color: #333;" th:text="'₹' + ${#numbers.formatDecimal(item.totalPrice, 1, 0)}">₹0</div>
       </div>
 
-      <div class="total-row" style="border-top: 1px dashed #fce4ec;">
-        <div class="order-summary-item"><span>Subtotal</span><span th:text="'₹' + ${subtotal}">₹0</span></div>
-        <div class="order-summary-item"><span>Shipping</span><span th:text="${shipping == 0 ? 'FREE' : '₹' + shipping}" style="color: #4caf50;">FREE</span></div>
+      <div style="border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px;">
+        <div class="order-summary-item"><span>Bag Subtotal</span><span th:text="'₹' + ${#numbers.formatDecimal(subtotal, 1, 0)}">₹0</span></div>
+        <div class="order-summary-item discount" th:if="${discount > 0}"><span>Coupon Discount</span><span th:text="'-₹' + ${#numbers.formatDecimal(discount, 1, 0)}">-₹0</span></div>
+        <div class="order-summary-item"><span>Delivery Charges</span><span th:text="${shipping == 0 ? 'FREE' : '₹' + #numbers.formatDecimal(shipping, 1, 0)}" th:style="${shipping == 0 ? 'color: #4caf50; font-weight: bold;' : 'color: #555;'}">FREE</span></div>
       </div>
 
       <div class="order-summary-item total-row">
         <span>Total Amount</span>
-        <span th:text="'₹' + ${total}">₹0</span>
+        <span th:text="'₹' + ${#numbers.formatDecimal(total, 1, 0)}">₹0</span>
       </div>
 
       <button type="submit" form="checkoutForm" class="place-order-btn">PLACE ORDER</button>

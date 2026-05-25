@@ -17,12 +17,12 @@ public class OrderController {
             @RequestParam String address,
             @RequestParam String phone,
             @RequestParam String pincode,
-            HttpSession session, // Make sure this is present
+            HttpSession session,
             Model model) {
 
         String orderId = "BBL-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
-        // CRITICAL: Save to session
+        // సెషన్‌లో డేటా సేవ్ చేస్తున్నాం
         session.setAttribute("lastOrderId", orderId);
         session.setAttribute("customerName", fullName);
         session.setAttribute("deliveryAddress", address + ", " + pincode);
@@ -32,69 +32,51 @@ public class OrderController {
         model.addAttribute("customerName", fullName);
         model.addAttribute("deliveryAddress", address + ", " + pincode);
 
-        return "order-success";
+        // templates/orders/order-success.html కి వెళ్తుంది
+        return "orders/order-success";
     }
-     // Add these to your existing OrderController.java
 
     @PostMapping("/order/cancel")
-    public String cancelOrder(@RequestParam String orderId, HttpSession session, Model model) {
-        // Update the status in the session memory
+    public String cancelOrder(@RequestParam String orderId, HttpSession session) {
         session.setAttribute("orderStatus", "CANCELLED");
-
-        // Refresh the history page to show the updated status
         return "redirect:/order/history";
     }
+
     @GetMapping("/order/track")
     public String trackOrder(@RequestParam String orderId, HttpSession session, Model model) {
-        // Get the current status from the session (or default to PLACED)
         String currentStatus = (String) session.getAttribute("orderStatus");
 
         model.addAttribute("orderId", orderId);
         model.addAttribute("status", currentStatus != null ? currentStatus : "PLACED");
 
-        return "track-order";
-    }
-
-    @PostMapping("/order/return")
-    public String returnOrder(@RequestParam String orderId, @RequestParam String reason) {
-        // Logic: Update status to 'RETURN_REQUESTED'
-        return "redirect:/order/history";
+        // templates/orders/track-order.html కి వెళ్తుంది
+        return "orders/track-order";
     }
 
     @GetMapping("/order/history")
     public String viewOrderHistory(HttpSession session, Model model) {
-        // Pull from session
         String orderId = (String) session.getAttribute("lastOrderId");
-
-        // TEST OVERRIDE: Remove or comment this line after testing
-        session.setAttribute("orderStatus", "DELIVERED");
 
         if (orderId != null) {
             model.addAttribute("orderId", orderId);
             model.addAttribute("customerName", session.getAttribute("customerName"));
             model.addAttribute("deliveryAddress", session.getAttribute("deliveryAddress"));
-
-            // This must be "DELIVERED" for the Return/Exchange buttons to appear
             model.addAttribute("status", session.getAttribute("orderStatus"));
         }
 
-        return "order-history";
+        // templates/orders/order-history.html కి వెళ్తుంది
+        return "orders/order-history";
     }
-    // Handle Return Request
+
     @GetMapping("/order/return")
     public String processReturn(@RequestParam String orderId, HttpSession session) {
-        // Updates session memory for your Maven/Jenkins testing environment
         session.setAttribute("orderStatus", "RETURN_INITIATED");
-
-        // Redirects to refresh the 'My Orders' page with the new status
         return "redirect:/order/history";
     }
 
-    // Handle Exchange Request
     @GetMapping("/order/exchange")
     public String processExchange(@RequestParam String orderId, HttpSession session) {
         session.setAttribute("orderStatus", "EXCHANGE_INITIATED");
-
         return "redirect:/order/history";
     }
 }

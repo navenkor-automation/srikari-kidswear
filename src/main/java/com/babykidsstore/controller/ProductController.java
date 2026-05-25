@@ -5,6 +5,7 @@ import com.babykidsstore.model.Review;
 import com.babykidsstore.repository.ProductRepository;
 import com.babykidsstore.repository.ReviewRepository;
 import com.babykidsstore.service.ProductService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,9 +26,9 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    // A. Shop Page with Category Filter
+ // A. Shop Page with Category Filter (Updated with Session Check for Ajio Header)
     @GetMapping("/shop")
-    public String showShop(@RequestParam(required = false) String category, Model model) {
+    public String showShop(@RequestParam(required = false) String category, Model model, HttpSession session) {
         List<Product> products;
         if (category != null && !category.isEmpty()) {
             products = productService.getProductsByCategory(category);
@@ -40,9 +41,12 @@ public class ProductController {
         List<Product> newArrivals = productRepository.findTop4ByNewArrivalTrueOrderByIdDesc();
         model.addAttribute("newArrivals", newArrivals);
 
+        // 🔥 సెషన్‌లో లాగిన్ అయిన యూజర్ పేరు ఉంటే దాన్ని హోమ్ పేజీ మోడల్ కి పంపుతాం అన్నా
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        model.addAttribute("loggedInUser", loggedInUser);
+
         return "shop-home/shop";
     }
-
     // B. Product Details Page
     @GetMapping("/product/{id}")
     public String viewProductDetails(@PathVariable("id") Long id, Model model) {

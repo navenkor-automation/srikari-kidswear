@@ -20,9 +20,9 @@ public class CheckoutController {
             return "redirect:/cart";
         }
 
-        // Calculate totals
+        // 🎯 FIX: getTotalPrice() లేకపోయినా ఎర్రర్ రాకుండా ఇక్కడే సేఫ్ గా క్యాలిక్యులేట్ చేస్తున్నాం
         double subtotal = cart.values().stream()
-                .mapToDouble(CartItem::getTotalPrice)
+                .mapToDouble(item -> item.getPrice() * item.getQuantity())
                 .sum();
 
         // Logical rule: Free shipping over ₹1000, otherwise ₹50
@@ -35,6 +35,9 @@ public class CheckoutController {
         model.addAttribute("shipping", shipping);
         model.addAttribute("total", total);
 
-        return "checkout";
+        // 🎯 FIX: ఒకవేళ నీ చెకౌట్ పేజీ కూడా cart-checkout లోపలే ఉంటే "cart-checkout/checkout" అని ఇవ్వాలి.
+        // ప్రస్తుతానికి నీ పాత పాత్ ని సేఫ్ గా ఉంచాను. ఎర్రర్ వస్తే దీన్ని "cart-checkout/checkout" కి మార్చుకోవచ్చు.
+        //  దీనితో రీప్లేస్ చేయండి
+        return "cart-checkout/checkout";
     }
 }

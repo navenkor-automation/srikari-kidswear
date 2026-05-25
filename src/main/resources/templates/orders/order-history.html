@@ -8,7 +8,7 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fff5f8; margin: 0; padding: 0; }
         header { background: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fce4ec; position: sticky; top: 0; z-index: 1000; }
-        .home-btn { text-decoration: none; font-size: 24px; color: #ad1457; }
+        .logo-link { font-size: 22px; font-weight: 900; color: #ff6bad; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; }
         .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
         h1 { color: #ad1457; margin-bottom: 30px; font-size: 24px; border-left: 5px solid #ff6bad; padding-left: 15px; }
         .order-card { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid #fce4ec; }
@@ -17,12 +17,10 @@
         .status-badge { padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
         .status-placed { background: #e3f2fd; color: #1976d2; }
         .status-shipped { background: #fff3e0; color: #f57c00; }
-        /* Existing styles... */
         .status-delivered { background: #e8f5e9; color: #4caf50; }
         .status-cancelled { background: #ffebee; color: #d32f2f; }
-        /* NEW: Add these for Return and Exchange */
-        .status-return { background: #f3e5f5; color: #7b1fa2; }    /* Light Purple */
-        .status-exchange { background: #e0f7fa; color: #00796b; }  /* Teal/Cyan */
+        .status-return { background: #f3e5f5; color: #7b1fa2; }
+        .status-exchange { background: #e0f7fa; color: #00796b; }
         .product-brief { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
         .product-img { width: 60px; height: 75px; object-fit: cover; border-radius: 8px; border: 1px solid #fce4ec; }
         .action-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; padding-top: 15px; border-top: 1px solid #fafafa; }
@@ -40,8 +38,7 @@
 
 <header>
     <div style="flex: 1;"><a href="/shop" class="logo-link">LITTLESTAR</a></div>
-    <div style="flex: 2; text-align: center;"><h1 style="color: #ad1457; margin: 0; font-size: 20px;">LITTLESTAR</h1></div>
-    <div style="flex: 1; text-align: right;"><a href="/cart" style="text-decoration: none;">🛒</a></div>
+    <div style="flex: 1; text-align: right;"><a href="/cart" style="text-decoration: none; font-size: 22px;">🛒</a></div>
 </header>
 
 <div class="container">
@@ -53,7 +50,6 @@
                 <span style="color: #888; font-size: 14px;">Order</span>
                 <span class="order-id" th:text="${orderId}">BBL-ID-HERE</span>
             </div>
-            <!-- Replace the existing status-badge span with this -->
             <span class="status-badge"
                   th:classappend="${status == 'CANCELLED' ? 'status-cancelled' :
                       (status == 'DELIVERED' ? 'status-delivered' :
@@ -63,7 +59,6 @@
         </div>
 
         <div class="product-brief">
-            <!-- Fixed placeholder to avoid broken image icon -->
             <img src="https://via.placeholder.com/60x75/ff6bad/ffffff?text=Order" class="product-img" alt="Product">
             <div>
                 <div style="font-weight: bold; color: #333;">Order for <span th:text="${customerName}">Customer</span></div>
@@ -72,18 +67,15 @@
         </div>
 
         <div class="action-group">
-            <!-- Tracking: Hidden if cancelled -->
             <a th:if="${status != 'CANCELLED'}"
                th:href="@{/order/track(orderId=${orderId})}"
                class="btn btn-track">TRACK ORDER</a>
 
-            <!-- Cancel: Only shows if status is PLACED -->
-            <form th:if="${status == 'PLACED'}" action="/order/cancel" method="post">
+            <form th:if="${status == 'PLACED'}" action="/order/cancel" method="post" style="display:inline;">
                 <input type="hidden" name="orderId" th:value="${orderId}">
                 <button type="submit" class="btn btn-cancel">CANCEL ORDER</button>
             </form>
 
-            <!-- Return/Exchange: Only show if status is DELIVERED -->
             <div th:if="${status == 'DELIVERED'}" style="display: flex; gap: 10px;">
                 <a th:href="@{/order/return(orderId=${orderId})}" class="btn btn-return">RETURN</a>
                 <a th:href="@{/order/exchange(orderId=${orderId})}" class="btn btn-return">EXCHANGE</a>
@@ -93,7 +85,7 @@
 
     <div class="empty-state" th:if="${orderId == null}">
         <p>You haven't placed any orders yet.</p>
-        <a href="/shop" style="color: #ff6bad; font-weight: bold;">Start Shopping</a>
+        <a href="/shop" style="color: #ff6bad; font-weight: bold; text-decoration: none;">Start Shopping</a>
     </div>
 </div>
 
