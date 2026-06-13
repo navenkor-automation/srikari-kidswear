@@ -2,17 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>LittleStar | Order Confirmed!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Srikari Kidswear | Order Confirmed!</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fff5f8; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .success-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; max-width: 500px; width: 90%; }
-        .icon-circle { width: 80px; height: 80px; background: #e8f5e9; color: #4caf50; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 20px; }
-        h1 { color: #ad1457; margin-bottom: 10px; }
-        p { color: #666; line-height: 1.6; }
-        .order-id { font-weight: bold; color: #333; background: #fce4ec; padding: 5px 12px; border-radius: 5px; font-family: monospace; }
-        .details-box { background: #fafafa; border: 1px solid #eee; border-radius: 10px; padding: 15px; margin: 20px 0; text-align: left; }
-        .continue-btn { display: inline-block; background: #ff6bad; color: white; text-decoration: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; margin-top: 20px; transition: 0.3s; }
-        .continue-btn:hover { background: #ad1457; transform: translateY(-2px); }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #fff5f8; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .success-card { background: white; padding: 30px 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); text-align: center; max-width: 450px; width: 90%; border: 1px solid #fce4ec; margin: 20px auto; box-sizing: border-box; }
+        .icon-circle { width: 70px; height: 70px; background: #e8f5e9; color: #4caf50; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; margin: 0 auto 15px; font-weight: bold; }
+        h1 { color: #ad1457; margin-bottom: 8px; font-size: 22px; margin-top: 0; }
+        p { color: #666; line-height: 1.5; font-size: 14px; margin-top: 0; margin-bottom: 15px; }
+        .order-id { font-weight: bold; color: #333; background: #fce4ec; padding: 4px 10px; border-radius: 5px; font-family: monospace; font-size: 13px; }
+        .details-box { background: #fffcfd; border: 1px dashed #ff6bad; border-radius: 10px; padding: 15px; margin: 20px 0; text-align: left; }
+        .continue-btn { display: block; background: #ff6bad; color: white; text-decoration: none; padding: 14px; border-radius: 25px; font-weight: bold; margin-top: 20px; transition: 0.2s; box-shadow: 0 4px 12px rgba(255,107,173,0.25); font-size: 14px; text-transform: uppercase; -webkit-tap-highlight-color: transparent; }
+        .continue-btn:hover { background: #ad1457; }
     </style>
 </head>
 <body>
@@ -23,12 +24,12 @@
     <p>Your order has been placed successfully. We're getting it ready for your little one!</p>
 
     <div class="details-box">
-        <div style="margin-bottom: 10px;"><strong>Order ID:</strong> <span class="order-id" th:text="${orderId}">BBL-12345</span></div>
-        <div><strong>Shipping to:</strong></div>
-        <div style="color: #888; font-size: 14px; margin-top: 5px;" th:text="${deliveryAddress}">123 Street Address, City</div>
+        <div style="margin-bottom: 12px; font-size: 14px;"><strong>Order ID:</strong> <span class="order-id" th:text="${orderId}">BBL-12345</span></div>
+        <div style="font-size: 14px; font-weight: bold; color: #333;">Shipping to:</div>
+        <div style="color: #777; font-size: 13px; margin-top: 5px; line-height: 1.4;" th:text="${deliveryAddress}">123 Street Address, City</div>
     </div>
 
-    <p style="font-size: 14px;">A confirmation email has been sent to your registered address.</p>
+    <p style="font-size: 12px; color: #999; margin-bottom: 0;">A confirmation email has been sent to your registered address.</p>
 
     <a href="/shop" class="continue-btn">CONTINUE SHOPPING</a>
 </div>

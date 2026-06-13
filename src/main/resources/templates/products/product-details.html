@@ -80,6 +80,75 @@
             border: 0;
             border-top: 2px dashed #fce4ec;
         }
+
+        /* 🎯 రెస్పాన్సివ్ హెడర్ మరియు బాటమ్ బార్ స్టైల్స్ అన్నా */
+        .desktop-orders {
+            display: inline-block;
+            text-decoration: none;
+            color: #555;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* డెస్క్‌టాప్ లో ఈ బాటమ్ మొబైల్ బార్ అస్సలు కనిపించదు */
+        .ajio-mobile-bottom-bar {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .desktop-orders {
+                display: none;
+            }
+            .nav-actions {
+                gap: 15px;
+                align-items: center;
+            }
+
+            /* పేజీ కింద ఖాళీ ఇవ్వడానికి (బాటమ్ బార్ కంటెంట్ ని నొక్కేయకుండా) */
+            body {
+                padding-bottom: 80px;
+            }
+
+            /* 🎯 AJIO STYLE FIXED BOTTOM BAR FOR MOBILE VIEW */
+            .ajio-mobile-bottom-bar {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 70px;
+                background: white;
+                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+                z-index: 9999;
+                align-items: center;
+                padding: 10px 16px;
+                box-sizing: border-box;
+                border-top: 1px solid #eee;
+            }
+
+            .mobile-icon-action {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 48px;
+                height: 48px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                color: #444;
+                text-decoration: none;
+                margin-right: 10px;
+                transition: 0.2s;
+            }
+
+            .mobile-bottom-btn-container {
+                flex: 1;
+            }
+
+            /* మొబైల్ లో లోపల ఉన్న పాత సింగిల్ బటన్ ని హైడ్ చేస్తున్నాను అన్నా */
+            .details-section .btn-pink {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -87,7 +156,7 @@
 <header>
     <a href="/shop" class="logo-link">srikarikidswear</a>
     <div class="nav-actions">
-        <a href="/order/history" style="text-decoration:none; color:#555; font-size:12px; font-weight:700;">My Orders</a>
+        <a href="/order/history" class="desktop-orders">My Orders</a>
 
         <a href="/cart" style="cursor:pointer; position:relative; color: inherit; text-decoration: none;">
             <i class="fa-solid fa-bag-shopping" style="font-size:20px;"></i>
@@ -248,6 +317,22 @@
     </div>
 </div>
 
+<div class="ajio-mobile-bottom-bar">
+    <a href="javascript:void(0)" class="mobile-icon-action" onclick="shareProduct()">
+        <i class="fa-solid fa-share-nodes" style="font-size: 18px;"></i>
+    </a>
+
+    <a href="javascript:void(0)" class="mobile-icon-action" onclick="toggleWishlist(this)">
+        <i class="fa-regular fa-heart" id="mobileWishIcon" style="font-size: 18px;"></i>
+    </a>
+
+    <div class="mobile-bottom-btn-container">
+        <button class="btn-pink" onclick="addToBag()" style="width: 100%; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 14px; letter-spacing: 0.5px; border: none; background: #ff6bad; color: white; box-shadow: 0 4px 10px rgba(255,107,173,0.2);">
+            ADD TO BAG
+        </button>
+    </div>
+</div>
+
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
 <div class="custom-modal" id="sizeChartModal">
@@ -299,20 +384,47 @@
         document.getElementById('overlay').style.display = 'none';
     }
 
-    // 🎯 FIX: ఇక్కడ మార్చాను అన్నా! బ్యాకెండ్ కి ఐటమ్ యాడ్ అవ్వగానే నేరుగా మన లగ్జరీ కార్ట్ (/cart) పేజీకి రీడైరెక్ట్ అయిపోతుంది!
     function addToBag() {
         const productId = pData.id;
         const url = `/cart/add?id=${productId}&size=${selectedProductSize}`;
 
         fetch(url, { method: 'POST' })
             .then(response => {
-                // బ్యాకెండ్ కి సక్సెస్ గా యాడ్ అయినా, అవ్వకపోయినా మనం డైరెక్ట్ గా లగ్జరీ కార్ట్ పేజీ కి పంపించేస్తున్నాం
                 window.location.href = "/cart";
             })
             .catch(err => {
                 console.error("Error calling Cart Add API:", err);
                 window.location.href = "/cart";
             });
+    }
+
+    // Wishlist Toggle (గుండె గుర్తు క్లిక్ ఈవెంట్)
+    function toggleWishlist(element) {
+        const icon = element.querySelector('i');
+        if (icon.classList.contains('fa-regular')) {
+            icon.classList.remove('fa-regular');
+            icon.classList.add('fa-solid');
+            icon.style.color = '#ff6bad';
+        } else {
+            icon.classList.remove('fa-solid');
+            icon.classList.add('fa-regular');
+            icon.style.color = '#444';
+        }
+    }
+
+    // Share Product Functionality
+    function shareProduct() {
+        if (navigator.share) {
+            navigator.share({
+                title: pData.name,
+                text: 'Check out this beautiful kidswear collection: ' + pData.name,
+                url: window.location.href
+            }).then(() => console.log('Successful share'))
+                .catch((error) => console.log('Error sharing', error));
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Product link copied to clipboard!");
+        }
     }
 
     function checkPin() {

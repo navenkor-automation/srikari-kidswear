@@ -1,5 +1,7 @@
 package com.babykidsstore.controller;
 
+import com.babykidsstore.repository.CartItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,9 @@ import java.util.UUID;
 @Controller
 public class OrderController {
 
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
     @PostMapping("/order/confirm")
     public String confirmOrder(
             @RequestParam String fullName,
@@ -20,9 +25,16 @@ public class OrderController {
             HttpSession session,
             Model model) {
 
+        // 1. సెషన్ నుండి లాగిన్ అయిన యూజర్ నేమ్ తీసుకుంటున్నాం
+        String customerName = (String) session.getAttribute("loggedInUser");
+        if (customerName == null) {
+            return "redirect:/login";
+        }
+
+        // 2. యూనిక్ ఆర్డర్ ఐడీ జనరేషన్
         String orderId = "BBL-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
-        // సెషన్‌లో డేటా సేవ్ చేస్తున్నాం
+        // 3. సెషన్‌లో ఆర్డర్ హిస్టరీ ట్రాకింగ్ డేటా సేవ్ చేస్తున్నాం అన్నా
         session.setAttribute("lastOrderId", orderId);
         session.setAttribute("customerName", fullName);
         session.setAttribute("deliveryAddress", address + ", " + pincode);
@@ -32,7 +44,14 @@ public class OrderController {
         model.addAttribute("customerName", fullName);
         model.addAttribute("deliveryAddress", address + ", " + pincode);
 
-        // templates/orders/order-success.html కి వెళ్తుంది
+        // 4. 🎯 FIX: ఆర్డర్ సక్సెస్ అయింది కాబట్టి, డేటాబేస్ లోని 'cart_items' టేబుల్ నుండి ఈ యూజర్ కార్ట్ మొత్తాన్ని క్లీన్ చేస్తున్నాం
+        cartItemRepository.deleteByCustomerName(customerName);
+
+        // సెషన్‌లో ఉన్న పాత తాత్కాలిక కార్ట్ అట్రిబ్యూట్స్ ని కూడా సేఫ్ గా క్లియర్ చేస్తున్నాం అన్నా
+        session.removeAttribute("cart");
+        session.removeAttribute("appliedCoupon");
+
+        // templates/orders/order-success.html కి వెళ్తుంది అన్నా
         return "orders/order-success";
     }
 

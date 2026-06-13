@@ -50,11 +50,11 @@
             <div class="user-welcome" th:text="'Hello, ' + ${userFullName}">Hello, User</div>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="#" class="active">Account Details</a></li>
-            <li><a href="#">My Orders</a></li>
-            <li><a href="#">Order History</a></li>
-            <li><a href="#">Shipping Address</a></li>
-            <li><a href="#">Sreekari Wallet</a></li>
+            <li><a th:href="@{/account}" class="account-link">Account Details</a></li>
+            <li><a th:href="@{/order/history}" class="account-link">My Orders</a></li>
+            <li><a th:href="@{/order/history}" class="account-link">Order History</a></li>
+            <li><a th:href="@{/customer/address}" class="account-link">Shipping Address</a></li>
+            <li><a th:href="@{/customer/wallet}" class="account-link">Sreekari Wallet</a></li>
         </ul>
     </div>
 
@@ -86,6 +86,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    // 🎯 బ్రౌజర్ లో ఏ పేజీ ఓపెన్ అయితే దానికి అజాయో స్టైల్ లో ఆక్టివ్ బార్ హైలైట్ అవుతుంది అన్నా
+    document.addEventListener("DOMContentLoaded", function() {
+        const currentPath = window.location.pathname;
+        const menuLinks = document.querySelectorAll(".sidebar-menu li a");
+
+        let matched = false;
+        menuLinks.forEach(link => {
+            const hrefAttr = link.getAttribute("href");
+            if (currentPath === hrefAttr) {
+                link.classList.add("active");
+                matched = true;
+            } else {
+                link.classList.remove("active");
+            }
+        });
+
+        if (!matched && menuLinks.length > 0) {
+            menuLinks[0].classList.add("active");
+        }
+    });
+</script>
 
 </body>
 </html>

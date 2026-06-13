@@ -2,47 +2,58 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Srikari Kidswear | Checkout</title>
   <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #fff5f8; margin: 0; padding: 0; color: #333; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #fff5f8; margin: 0; padding: 0; color: #333; padding-bottom: 80px; }
 
-    header { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fce4ec; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-    .home-btn { text-decoration: none; font-size: 22px; color: #ff6bad; }
-    .logo-text { font-size: 20px; font-weight: 900; color: #ff6bad; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
+    header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fce4ec; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+    .home-btn { text-decoration: none; font-size: 22px; color: #ff6bad; font-weight: bold; }
+    .logo-text { font-size: 18px; font-weight: 900; color: #ff6bad; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
 
-    .checkout-wrapper { max-width: 1100px; margin: 30px auto; display: flex; flex-wrap: wrap; gap: 30px; padding: 0 20px; align-items: flex-start; }
-    .left-col { flex: 1.5; min-width: 350px; }
-    .right-col { flex: 1; min-width: 300px; position: sticky; top: 100px; }
+    .checkout-wrapper { max-width: 1100px; margin: 20px auto; display: flex; flex-wrap: wrap; gap: 20px; padding: 0 15px; align-items: flex-start; }
+    .left-col { flex: 1.5; min-width: 320px; width: 100%; }
+    .right-col { flex: 1; min-width: 300px; position: sticky; top: 80px; width: 100%; }
 
-    .section-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 20px; border: 1px solid #fce4ec; }
-    h2 { color: #2c3e50; border-bottom: 2px solid #fdf0f4; padding-bottom: 10px; margin-top: 0; font-size: 1.1rem; font-weight: 700; }
+    .section-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 15px; border: 1px solid #fce4ec; }
+    h2 { color: #2c3e50; border-bottom: 2px solid #fdf0f4; padding-bottom: 8px; margin-top: 0; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
     .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 6px; font-weight: bold; color: #666; font-size: 13px; }
-    input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: #fafafa; font-size: 14px; outline: none; }
-    input:focus { border-color: #ff6bad; background: white; }
+    label { display: block; margin-bottom: 6px; font-weight: bold; color: #666; font-size: 12px; }
+    input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: #fafafa; font-size: 14px; outline: none; transition: 0.2s; }
+    input:focus { border-color: #ff6bad; background: white; box-shadow: 0 0 5px rgba(255,107,173,0.2); }
 
     .payment-tabs { display: flex; gap: 10px; margin-top: 15px; }
-    .tab { flex: 1; padding: 12px 5px; text-align: center; cursor: pointer; border: 1px solid #fce4ec; border-radius: 10px; background: #fffcfd; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .tab { flex: 1; padding: 12px 5px; text-align: center; cursor: pointer; border: 1px solid #fce4ec; border-radius: 10px; background: #fffcfd; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
     .tab input { display: none; }
     .tab:has(input:checked) { border: 2px solid #ff6bad; background: white; box-shadow: 0 2px 8px rgba(255,107,173,0.15); }
 
     .method-label { font-size: 11px; font-weight: bold; color: #ad1457; margin-top: 5px; text-transform: uppercase; }
-    .payment-logo { height: 18px; object-fit: contain; margin-bottom: 2px; }
+    .payment-logo { height: 16px; object-fit: contain; margin-bottom: 2px; }
 
     .order-summary-item { display: flex; justify-content: space-between; margin-bottom: 12px; color: #555; font-size: 14px; }
     .order-summary-item.discount { color: #4caf50; font-weight: 500; }
     .total-row { border-top: 2px dashed #fce4ec; padding-top: 15px; margin-top: 15px; font-weight: bold; font-size: 18px; color: #ad1457; }
 
-    .place-order-btn { background: #ff6bad; color: white; border: none; padding: 16px; width: 100%; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 12px rgba(255,107,173,0.3); transition: 0.2s; }
+    /* Desktop View Buttons */
+    .place-order-btn { background: #ff6bad; color: white; border: none; padding: 15px; width: 100%; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 12px rgba(255,107,173,0.3); transition: 0.2s; text-transform: uppercase; }
     .place-order-btn:hover { background: #e05595; }
     .back-link { display: block; text-align: center; margin-top: 15px; color: #ff6bad; text-decoration: none; font-size: 13px; font-weight: bold; }
-    .back-link:hover { text-decoration: underline; }
+
+    /* Ajio Mobile Fixed Bottom Bar Styling */
+    .mobile-action-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #fce4ec; padding: 12px 20px; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); z-index: 2000; align-items: center; justify-content: space-between; }
+    .mobile-price-info { display: flex; flex-direction: column; }
+    .mobile-price-label { font-size: 11px; color: #777; text-transform: uppercase; }
+    .mobile-total-price { font-size: 20px; font-weight: 800; color: #ad1457; }
+    .mobile-submit-btn { background: #ff6bad; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-size: 14px; font-weight: bold; cursor: pointer; text-transform: uppercase; box-shadow: 0 3px 10px rgba(255,107,173,0.3); }
 
     @media (max-width: 768px) {
-      .checkout-wrapper { flex-direction: column; margin: 15px auto; padding: 0 12px; }
+      body { padding-bottom: 90px; }
+      .checkout-wrapper { flex-direction: column; margin: 10px auto; padding: 0 10px; gap: 10px; }
       .left-col, .right-col { width: 100%; min-width: 100%; position: relative; top: 0; }
+      .right-col .place-order-btn { display: none; } /* Hide standard button on mobile */
+      .mobile-action-bar { display: flex; } /* Show Ajio style bottom bar */
+      .section-box { padding: 15px; border-radius: 10px; margin-bottom: 10px; }
     }
   </style>
 </head>
@@ -67,11 +78,11 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
           <div class="form-group">
             <label>Phone Number</label>
-            <input type="tel" name="phone" placeholder="10-digit mobile number" required>
+            <input type="tel" name="phone" placeholder="10-digit mobile number" pattern="[0-9]{10}" required>
           </div>
           <div class="form-group">
             <label>Pincode</label>
-            <input type="text" name="pincode" placeholder="6-digit pincode" required>
+            <input type="text" name="pincode" placeholder="6-digit pincode" pattern="[0-9]{6}" required>
           </div>
         </div>
 
@@ -80,7 +91,7 @@
           <input type="text" name="address" placeholder="Flat No, Building, Area, Colony" required>
         </div>
 
-        <h2 style="margin-top: 35px;">Payment Method</h2>
+        <h2 style="margin-top: 30px;">Payment Method</h2>
         <div class="payment-tabs">
           <label class="tab">
             <input type="radio" name="paymentType" value="COD" checked onclick="togglePayment('cod')">
@@ -90,15 +101,13 @@
 
           <label class="tab">
             <input type="radio" name="paymentType" value="UPI" onclick="togglePayment('upi')">
-            <div style="display: flex; gap: 4px;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo.png" class="payment-logo" alt="UPI">
-            </div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo.png" class="payment-logo" alt="UPI">
             <div class="method-label">UPI</div>
           </label>
 
           <label class="tab">
             <input type="radio" name="paymentType" value="CARD" onclick="togglePayment('card')">
-            <div style="display: flex; gap: 4px;">
+            <div style="display: flex; gap: 2px;">
               <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="payment-logo" alt="Visa">
               <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" class="payment-logo" alt="MC">
             </div>
@@ -106,16 +115,16 @@
           </label>
         </div>
 
-        <div style="padding: 20px; background: #fffcfd; border-radius: 12px; margin-top: 15px; border: 1px solid #fce4ec;">
+        <div style="padding: 15px; background: #fffcfd; border-radius: 12px; margin-top: 15px; border: 1px solid #fce4ec;">
           <div id="cod-fields">
             <p style="color: #666; font-size: 13px; margin: 0;">Pay securely with cash or QR code at your doorstep.</p>
           </div>
 
           <div id="upi-fields" style="display: none;">
             <label>Select UPI App</label>
-            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-              <img src="https://download.logo.wine/logo/PhonePe/PhonePe-Logo.wine.png" style="height: 30px; cursor: pointer;">
-              <img src="https://download.logo.wine/logo/Google_Pay/Google_Pay-Logo.wine.png" style="height: 30px; cursor: pointer;">
+            <div style="display: flex; gap: 15px; margin-bottom: 12px;">
+              <img src="https://download.logo.wine/logo/PhonePe/PhonePe-Logo.wine.png" style="height: 25px; cursor: pointer;">
+              <img src="https://download.logo.wine/logo/Google_Pay/Google_Pay-Logo.wine.png" style="height: 25px; cursor: pointer;">
             </div>
             <input type="text" name="upiId" placeholder="Enter UPI ID (e.g. name@okaxis)">
           </div>
@@ -123,8 +132,8 @@
           <div id="card-fields" style="display: none;">
             <input type="text" name="cardNumber" placeholder="Card Number" maxlength="16" style="margin-bottom: 10px;">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-              <input type="text" name="expiry" placeholder="MM/YY">
-              <input type="password" name="cvv" placeholder="CVV">
+              <input type="text" name="expiry" placeholder="MM/YY" maxlength="5">
+              <input type="password" name="cvv" placeholder="CVV" maxlength="3">
             </div>
           </div>
         </div>
@@ -139,12 +148,12 @@
         <img th:src="${item.imageUrl}" style="width: 45px; height: 55px; object-fit: cover; border-radius: 6px; border: 1px solid #fce4ec; flex-shrink: 0;">
         <div style="flex: 1; min-width: 0;">
           <div style="font-weight: 600; font-size: 13px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${item.name}">Product</div>
-          <div style="font-size: 12px; color: #777; margin-top: 2px;" th:text="'Qty: ' + ${item.quantity} + ' | Size: ' + ${item.size != null ? item.size : 'N/A'}">Qty: 1</div>
+          <div style="font-size: 12px; color: #777; margin-top: 2px;" th:text="'Qty: ' + ${item.quantity} + ' | Size: ' + ${item.size != null ? item.size : '0-6M'}">Qty: 1</div>
         </div>
         <div style="font-weight: bold; font-size: 14px; color: #333;" th:text="'₹' + ${#numbers.formatDecimal(item.totalPrice, 1, 0)}">₹0</div>
       </div>
 
-      <div style="border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px;">
+      <div style="border-top: 1px solid #eee; padding-top: 12px; margin-top: 12px;">
         <div class="order-summary-item"><span>Bag Subtotal</span><span th:text="'₹' + ${#numbers.formatDecimal(subtotal, 1, 0)}">₹0</span></div>
         <div class="order-summary-item discount" th:if="${discount > 0}"><span>Coupon Discount</span><span th:text="'-₹' + ${#numbers.formatDecimal(discount, 1, 0)}">-₹0</span></div>
         <div class="order-summary-item"><span>Delivery Charges</span><span th:text="${shipping == 0 ? 'FREE' : '₹' + #numbers.formatDecimal(shipping, 1, 0)}" th:style="${shipping == 0 ? 'color: #4caf50; font-weight: bold;' : 'color: #555;'}">FREE</span></div>
@@ -159,6 +168,14 @@
       <a href="/cart" class="back-link">← Edit Shopping Bag</a>
     </div>
   </div>
+</div>
+
+<div class="mobile-action-bar">
+  <div class="mobile-price-info">
+    <span class="mobile-price-label">Total Payable</span>
+    <span class="mobile-total-price" th:text="'₹' + ${#numbers.formatDecimal(total, 1, 0)}">₹0</span>
+  </div>
+  <button type="submit" form="checkoutForm" class="mobile-submit-btn">PLACE ORDER</button>
 </div>
 
 <script>

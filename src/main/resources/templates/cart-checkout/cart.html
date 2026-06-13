@@ -2,324 +2,218 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Srikari Kidswear | Your Shopping Bag</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Srikari Kidswear | Shopping Bag</title>
     <style>
-        :root {
-            --primary-pink: #ff6bad;
-            --dark-pink: #ad1457;
-            --bg-color: #fff5f8;
-            --text-color: #2c3e50;
-        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #fff5f8; margin: 0; padding: 0; padding-bottom: 80px; color: #333; }
 
-        body { background-color: var(--bg-color); font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; color: #333; -webkit-tap-highlight-color: transparent; }
-        header { background: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fce4ec; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-        .logo-link { font-size: 22px; font-weight: 900; color: var(--primary-pink); text-decoration: none; text-transform: uppercase; letter-spacing: 1px; }
-        .header-right { display: flex; align-items: center; gap: 25px; }
-        .my-orders-header { color: #555; text-decoration: none; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 20px; transition: 0.2s; border: 1px solid #ddd; }
-        .my-orders-header:hover { color: var(--primary-pink); border-color: var(--primary-pink); background: #fff0f5; }
-        .cart-icon-box { text-decoration: none; position: relative; font-size: 22px; color: #333; display: flex; align-items: center; }
-        .cart-count-badge { position: absolute; top: -10px; right: -12px; background: var(--primary-pink); color: white; border-radius: 50%; padding: 2px 7px; font-size: 11px; font-weight: bold; border: 2px solid white; }
+        header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fce4ec; position: sticky; top: 0; z-index: 1000; }
+        .logo-link { font-size: 20px; font-weight: 900; color: #ff6bad; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; }
 
-        .cart-wrapper { max-width: 1150px; margin: 30px auto; padding: 0 20px; display: flex; gap: 30px; align-items: flex-start; }
-        .cart-left { flex: 0 0 65%; min-width: 0; }
-        .cart-right { flex: 0 0 35%; position: sticky; top: 90px; }
-        .section-title { font-size: 20px; font-weight: 700; color: var(--text-color); margin-bottom: 20px; border-bottom: 2px solid #fce4ec; padding-bottom: 10px; }
+        .cart-container { max-width: 1100px; margin: 20px auto; display: flex; flex-wrap: wrap; gap: 20px; padding: 0 15px; }
+        .cart-left { flex: 1.6; min-width: 320px; width: 100%; }
+        .cart-right { flex: 1; min-width: 300px; position: sticky; top: 80px; width: 100%; }
 
-        .cart-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #fce4ec; box-shadow: 0 4px 12px rgba(0,0,0,0.02); display: flex; flex-direction: column; }
-        .item-main-info { display: flex; gap: 20px; width: 100%; align-items: flex-start; }
-        .item-img-box { width: 110px; height: 130px; border-radius: 8px; overflow: hidden; background: #fafafa; border: 1px solid #f5f5f5; flex-shrink: 0; }
-        .item-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        .item-details { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-        .item-name { font-size: 16px; font-weight: 600; color: #333; margin: 0; line-height: 1.4; }
-        .item-size-tag { font-size: 13px; color: #666; margin: 4px 0; }
-        .size-highlight { font-weight: bold; color: var(--primary-pink); background: #fff0f5; padding: 2px 8px; border-radius: 4px; border: 1px solid #ffe1ec; }
+        .card-box { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 15px; border: 1px solid #fce4ec; }
+        h2 { font-size: 15px; color: #ad1457; text-transform: uppercase; margin-top: 0; margin-bottom: 15px; letter-spacing: 0.5px; border-left: 3px solid #ff6bad; padding-left: 10px; }
 
-        .qty-container { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
-        .qty-label { font-size: 13px; color: #666; }
-        .qty-btn { background: white; border: 1px solid #ddd; color: #333; width: 32px; height: 32px; cursor: pointer; border-radius: 50%; font-weight: bold; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .qty-btn:hover { border-color: var(--primary-pink); color: var(--primary-pink); background: #fff0f5; }
-        .qty-val { font-weight: 700; color: #333; font-size: 15px; min-width: 15px; text-align: center; }
+        /* Ajio Style List for Cart Items */
+        .cart-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px dashed #fce4ec; position: relative; }
+        .cart-item:last-child { border-bottom: none; }
+        .item-img { width: 70px; height: 90px; object-fit: cover; border-radius: 8px; border: 1px solid #fce4ec; flex-shrink: 0; }
+        .item-details { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; }
+        .item-name { font-weight: 600; font-size: 14px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .item-price-box { text-align: right; min-width: 100px; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; }
-        .current-price { font-size: 18px; font-weight: 700; color: var(--text-color); }
-        .each-price { color: #999; font-size: 12px; margin-top: 3px; }
+        .item-meta { display: flex; gap: 12px; align-items: center; margin-top: 5px; font-size: 12px; color: #666; }
+        .size-badge { background: #fff5f8; border: 1px solid #ff6bad; color: #ad1457; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
 
-        .card-actions { display: flex; align-items: center; gap: 12px; margin-top: 15px; border-top: 1px solid #fdf0f4; padding-top: 14px; flex-wrap: wrap; }
-        .action-submit-btn { background: none; border: none; color: #666; cursor: pointer; font-weight: 600; font-size: 13px; padding: 6px 10px; border-radius: 4px; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; }
-        .action-submit-btn:hover { color: var(--dark-pink); background: #fff0f5; }
-        .action-submit-btn.remove-btn { color: #e53935; }
-        .action-submit-btn.remove-btn:hover { color: #b71c1c; background: #ffebee; }
-        .action-submit-btn.share-btn { background: #f5f5f5; border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; }
-        .action-submit-btn.share-btn:hover { background: #e0e0e0; }
-        .divider { color: #e0e0e0; font-size: 12px; margin: 0 2px; }
+        /* Qty Selectors */
+        .qty-controls { display: flex; align-items: center; border: 1px solid #ddd; border-radius: 20px; background: #fafafa; overflow: hidden; }
+        .qty-btn { background: none; border: none; padding: 4px 12px; font-size: 14px; font-weight: bold; cursor: pointer; color: #555; }
+        .qty-btn:hover { background: #eee; }
+        .qty-val { padding: 0 5px; font-size: 13px; font-weight: bold; min-width: 15px; text-align: center; }
 
-        .suggestions-container { margin-top: 40px; width: 100%; box-sizing: border-box; }
-        .suggestions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 15px; width: 100%; }
-        .suggestion-card { background: white; border: 1px solid #fce4ec; border-radius: 12px; padding: 12px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; height: 290px; box-sizing: border-box; min-width: 0; }
-        .sugg-img-box { width: 100%; height: 140px; border-radius: 8px; overflow: hidden; margin-bottom: 8px; background: #fafafa; display: flex; align-items: center; justify-content: center; border: 1px solid #f9f0f3; }
-        .sugg-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        .sugg-info-block { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; min-width: 0; }
-        .sugg-name { font-size: 13px; font-weight: 600; color: #333; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; width: 100%; }
-        .sugg-price { font-size: 14px; font-weight: 700; color: var(--dark-pink); text-align: center; }
-        .sugg-add-btn { background: #fff0f5; border: 1px solid var(--primary-pink); color: var(--primary-pink); font-size: 12px; font-weight: bold; padding: 10px 0; width: 100%; border-radius: 20px; cursor: pointer; transition: 0.2s; text-transform: uppercase; display: block; }
-        .sugg-add-btn:hover { background: var(--primary-pink); color: white; }
+        .item-price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .item-price { font-weight: bold; font-size: 15px; color: #ad1457; }
 
-        .coupon-box { background: white; border-radius: 12px; padding: 16px; border: 1px solid #fce4ec; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); position: relative; }
-        .coupon-title { font-size: 13px; font-weight: 700; color: #7f8c8d; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-        .coupon-input-group { display: flex; gap: 10px; }
-        .coupon-input { flex: 1; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; }
-        .coupon-input:focus { border-color: var(--primary-pink); }
-        .coupon-apply-btn { background: #fff0f5; border: 1px solid var(--primary-pink); color: var(--primary-pink); padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; display: inline-block; }
-        .coupon-apply-btn:hover { background: var(--primary-pink); color: white; }
-        .coupon-msg { font-size: 12px; margin-top: 8px; color: var(--primary-pink); font-weight: 600; display: block; word-break: break-word; }
+        /* Item Action Links */
+        .item-actions { display: flex; gap: 15px; margin-top: 10px; }
+        .action-link { background: none; border: none; color: #ff6bad; font-size: 12px; font-weight: bold; cursor: pointer; padding: 0; text-transform: uppercase; text-decoration: none; }
+        .action-link:hover { color: #ad1457; }
 
-        .summary-card { background: white; border-radius: 12px; padding: 20px; border: 1px solid #fce4ec; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-        .summary-title { font-size: 13px; font-weight: 700; color: #7f8c8d; text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px; letter-spacing: 0.5px; }
-        .price-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #555; }
-        .price-row.discount { color: #4caf50; font-weight: 500; }
-        .price-row.total { font-size: 18px; font-weight: 700; color: var(--dark-pink); border-top: 2px dashed #fce4ec; padding-top: 14px; margin-top: 14px; }
-        .checkout-btn { display: block; text-align: center; background: var(--primary-pink); color: white; padding: 14px 0; border-radius: 25px; font-weight: bold; font-size: 15px; width: 100%; text-decoration: none; box-shadow: 0 4px 12px rgba(255, 107, 173, 0.3); margin-top: 15px; transition: 0.2s; }
-        .checkout-btn:hover { background: #e05595; transform: translateY(-1px); }
+        /* Coupon Section */
+        .coupon-box { display: flex; gap: 10px; margin-top: 10px; }
+        .coupon-input { flex: 1; padding: 10px 12px; border: 1px solid #ddd; border-radius: 25px; font-size: 13px; outline: none; text-transform: uppercase; }
+        .coupon-btn { background: #ff6bad; color: white; border: none; padding: 0 20px; border-radius: 25px; font-size: 12px; font-weight: bold; cursor: pointer; }
 
-        .sfl-container { margin-top: 35px; border-top: 2px dashed var(--primary-pink); padding-top: 20px; }
-        .modal { display:none; position:fixed; z-index: 9999; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); }
-        .modal-content { background:white; margin: 20vh auto; padding:25px; width:90%; max-width:340px; border-radius:16px; text-align:center; position:relative; }
-        .share-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
-        .share-option { cursor: pointer; font-size: 11px; color: #555; }
-        .share-icon { font-size: 26px; display: block; margin-bottom: 5px; }
+        /* Price Details rows */
+        .price-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; color: #555; }
+        .price-total { border-top: 2px dashed #fce4ec; padding-top: 12px; margin-top: 12px; font-weight: bold; font-size: 16px; color: #ad1457; }
 
-        /* MOBILE OPTIMIZATIONS FIXED */
+        .checkout-btn { display: block; background: #ff6bad; color: white; border: none; padding: 14px; width: 100%; border-radius: 25px; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(255,107,173,0.3); text-transform: uppercase; margin-top: 15px; box-sizing: border-box; }
+
+        /* Recommendation Cards Grid */
+        .rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-top: 15px; }
+        .rec-card { background: #fffcfd; border: 1px solid #fce4ec; border-radius: 8px; padding: 8px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+        .rec-img { width: 100%; height: 120px; object-fit: cover; border-radius: 6px; }
+        .rec-title { font-size: 11px; font-weight: 600; color: #333; margin: 6px 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .rec-price { font-size: 12px; font-weight: bold; color: #ad1457; margin-bottom: 6px; }
+        .rec-btn { background: white; border: 1px solid #ff6bad; color: #ff6bad; font-size: 10px; font-weight: bold; padding: 5px; border-radius: 15px; cursor: pointer; text-transform: uppercase; width: 100%; }
+        .rec-btn:hover { background: #fff5f8; }
+
+        /* Ajio Mobile Fixed Action Bar */
+        .mobile-cart-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #fce4ec; padding: 12px 15px; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); z-index: 2000; align-items: center; justify-content: space-between; }
+        .mobile-total-box { display: flex; flex-direction: column; }
+
         @media (max-width: 768px) {
-            header { padding: 15px 20px; }
-            .cart-wrapper { flex-direction: column !important; display: flex !important; margin: 15px auto; padding: 0 12px; }
-            .cart-left { flex: 1 1 100% !important; width: 100% !important; max-width: 100% !important; }
-            .cart-right { flex: 1 1 100% !important; width: 100% !important; max-width: 100% !important; position: relative !important; top: 0 !important; margin-top: 20px !important; }
-
-            /* Cleaned up Mobile Actions Layout */
-            .card-actions { gap: 10px; justify-content: flex-start; padding-top: 10px; }
-            .action-submit-btn { background: none !important; border: none !important; padding: 4px 6px !important; font-size: 13px !important; flex: none !important; width: auto !important; }
-            .action-submit-btn.share-btn { background: #f5f5f5 !important; border: 1px solid #ddd !important; padding: 6px 12px !important; border-radius: 4px !important; }
-            .divider { display: inline-block !important; color: #e0e0e0; }
-
-            .suggestions-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .suggestion-card { height: 270px !important; padding: 10px; }
-            .sugg-img-box { height: 140px !important; margin-bottom: 6px; }
-            .sugg-name { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 34px; font-size: 12px; line-height: 1.4; }
+            body { padding-bottom: 90px; }
+            .cart-container { flex-direction: column; margin: 10px auto; padding: 0 10px; gap: 10px; }
+            .cart-left, .cart-right { width: 100%; min-width: 100%; position: relative; top: 0; }
+            .cart-right .checkout-btn { display: none; } /* Hide standard checkout btn */
+            .mobile-cart-bar { display: flex; } /* Show fixed bottom bar like Ajio */
+            .card-box { padding: 15px; border-radius: 10px; margin-bottom: 10px; }
+            .rec-grid { grid-template-columns: repeat(2, 1fr); } /* 2 cards per row on mobile */
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div><a href="/shop" class="logo-link">srikarikidswear</a></div>
-    <div class="header-right">
-        <a href="/order/history" class="my-orders-header"><i class="fa-solid fa-box-open"></i> My Orders</a>
-        <a href="/cart" class="cart-icon-box">
-            <i class="fa-solid fa-bag-shopping"></i>
-            <span th:text="${cartCount != null ? cartCount : 0}" class="cart-count-badge">0</span>
-        </a>
-    </div>
+    <div><a href="/shop" class="logo-link">Srikari Kidswear</a></div>
+    <div style="font-size: 14px; font-weight: bold; color: #ad1457;">Bag (<span th:text="${cartCount}">0</span>)</div>
 </header>
 
-<div class="cart-wrapper">
+<div class="cart-container">
     <div class="cart-left">
-        <div class="section-title">Your Shopping Bag</div>
+        <div class="card-box">
+            <h2>Shopping Bag Items</h2>
+            <div th:if="${#lists.isEmpty(cartItems)}" style="text-align: center; padding: 30px 0; color: #999;">
+                <p style="font-size: 14px; margin-bottom: 15px;">Your shopping bag is completely empty!</p>
+                <a href="/shop" style="color: #ff6bad; font-weight: bold; text-decoration: none; border: 1px solid #ff6bad; padding: 6px 15px; border-radius: 20px;">Shop Now</a>
+            </div>
 
-        <div th:if="${#lists.isEmpty(cartItems)}" style="text-align: center; padding: 50px 20px; background: white; border-radius: 12px; border: 1px solid #fce4ec;">
-            <i class="fa-solid fa-bag-shopping" style="font-size: 44px; color: var(--primary-pink); margin-bottom: 15px;"></i>
-            <p style="color: #666; font-size: 16px; font-weight: 500; margin: 0 0 15px 0;">Your shopping bag is currently empty.</p>
-            <a href="/shop" style="color: white; background: var(--primary-pink); padding: 10px 24px; border-radius: 20px; font-weight: bold; text-decoration: none; display: inline-block;">Go Shopping</a>
-        </div>
+            <div class="cart-item" th:each="item : ${cartItems}">
+                <img th:src="${item.imageUrl}" class="item-img" alt="Product Image">
+                <div class="item-details">
+                    <div class="item-name" th:text="${item.name}">Product Name Here</div>
 
-        <div th:unless="${#lists.isEmpty(cartItems)}">
-            <div class="cart-card" th:each="item : ${cartItems}">
-                <div class="item-main-info">
-                    <div class="item-img-box"><img th:src="${item.imageUrl}" alt="Product Image"></div>
-                    <div class="item-details">
-                        <h4 class="item-name" th:text="${item.name}">Product Name</h4>
-                        <div class="item-size-tag">
-                            Size: <span class="size-highlight" th:text="${item.size != null ? item.size : 'N/A'}">2-3Y</span>
-                        </div>
+                    <div class="item-meta">
+                        <span>Size: <mark class="size-badge" th:text="${item.size != null ? item.size : '0-6M'}">0-6M</mark></span>
 
-                        <div class="qty-container">
-                            <span class="qty-label">Qty:</span>
-                            <button type="button" th:data-id="${item.id}" th:data-size="${item.size}" onclick="handleQtyUpdate(this, 'decrease')" class="qty-btn">-</button>
-                            <span th:text="${item.quantity}" class="qty-val">1</span>
-                            <button type="button" th:data-id="${item.id}" th:data-size="${item.size}" onclick="handleQtyUpdate(this, 'increase')" class="qty-btn">+</button>
+                        <div class="qty-controls">
+                            <form action="/cart/update" method="post" style="display:inline;">
+                                <input type="hidden" name="id" th:value="${item.id}">
+                                <input type="hidden" name="size" th:value="${item.size}">
+                                <input type="hidden" name="action" value="decrease">
+                                <button type="submit" class="qty-btn" th:disabled="${item.quantity <= 1}">-</button>
+                            </form>
+                            <span class="qty-val" th:text="${item.quantity}">1</span>
+                            <form action="/cart/update" method="post" style="display:inline;">
+                                <input type="hidden" name="id" th:value="${item.id}">
+                                <input type="hidden" name="size" th:value="${item.size}">
+                                <input type="hidden" name="action" value="increase">
+                                <button type="submit" class="qty-btn">+</button>
+                            </form>
                         </div>
                     </div>
-                    <div class="item-price-box">
-                        <span class="current-price" th:text="'₹' + ${#numbers.formatDecimal(item.totalPrice, 1, 0)}">₹100</span>
-                        <span class="each-price" th:text="'(₹' + ${#numbers.formatDecimal(item.price, 1, 0)} + ' each)'">(₹100 each)</span>
-                    </div>
-                </div>
 
-                <div class="card-actions">
-                    <button type="button" th:data-id="${item.id}" onclick="handleRemove(this)" class="action-submit-btn remove-btn">Remove</button>
-                    <span class="divider">|</span>
-                    <button type="button" th:data-id="${item.id}" onclick="handleSaveLater(this)" class="action-submit-btn">Save Later</button>
-                    <span class="divider">|</span>
-                    <button type="button" th:data-name="${item.name}" th:data-img="${item.imageUrl}" onclick="openShare(this.getAttribute('data-name'), this.getAttribute('data-img'))" class="action-submit-btn share-btn">Share</button>
+                    <div class="item-price-row">
+                        <div class="item-price" th:text="'₹' + ${#numbers.formatDecimal(item.totalPrice, 1, 0)}">₹0</div>
+                        <div class="item-actions">
+                            <form action="/cart/save-for-later" method="post" style="display:inline;">
+                                <input type="hidden" name="id" th:value="${item.id}">
+                                <input type="hidden" name="size" th:value="${item.size}">
+                                <button type="submit" class="action-link">Save For Later</button>
+                            </form>
+                            <form action="/cart/remove" method="post" style="display:inline;">
+                                <input type="hidden" name="id" th:value="${item.id}">
+                                <input type="hidden" name="size" th:value="${item.size}">
+                                <button type="submit" class="action-link" style="color: #ff5252;">Remove</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="suggestions-container" th:unless="${#lists.isEmpty(recommendations)}">
-            <div class="section-title" style="color: #555; font-size: 17px; margin-top: 20px;"><i class="fa-solid fa-heart" style="color: var(--primary-pink);"></i> You May Also Like</div>
-            <div class="suggestions-grid">
-                <div class="suggestion-card" th:each="prod : ${recommendations}">
+        <div class="card-box" th:if="${!#lists.isEmpty(savedItems)}">
+            <h2>Saved For Later (<span th:text="${#lists.size(savedItems)}">0</span>)</h2>
+            <div class="cart-item" th:each="item : ${savedItems}">
+                <img th:src="${item.imageUrl}" class="item-img" alt="Saved Product">
+                <div class="item-details">
+                    <div class="item-name" th:text="${item.name}">Product Name</div>
+                    <div style="font-size: 12px; color: #777; margin-top: 4px;" th:text="'Size Selected: ' + ${item.size}">Size: 0-6M</div>
+                    <div class="item-price-row">
+                        <div class="item-price" th:text="'₹' + ${#numbers.formatDecimal(item.price, 1, 0)}">₹0</div>
+                        <div class="item-actions">
+                            <form action="/cart/move-to-bag" method="post" style="display:inline;">
+                                <input type="hidden" name="id" th:value="${item.id}">
+                                <input type="hidden" name="size" th:value="${item.size}">
+                                <button type="submit" class="action-link" style="color: #4caf50;">Move To Bag</button>
+                            </form>
+                            <form action="/cart/remove-saved" method="post" style="display:inline;">
+                                <input type="hidden" name="id" th:value="${item.id}">
+                                <input type="hidden" name="size" th:value="${item.size}">
+                                <button type="submit" class="action-link" style="color: #ff5252;">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-box" th:if="${!#lists.isEmpty(recommendations)}">
+            <h2>You May Also Like</h2>
+            <div class="rec-grid">
+                <div class="rec-card" th:each="prod : ${recommendations}">
                     <div>
-                        <div class="sugg-img-box"><img th:src="${prod.imageUrl}" alt="Product Image"></div>
-                        <div class="sugg-info-block">
-                            <h5 class="sugg-name" th:text="${prod.name}">Product Name</h5>
-                            <span class="sugg-price" th:text="'₹' + ${#numbers.formatDecimal(prod.price, 1, 0)}">₹499</span>
-                        </div>
+                        <img th:src="${prod.imageUrl}" class="rec-img" alt="Recommended Product">
+                        <div class="rec-title" th:text="${prod.name}">Product Name</div>
+                        <div class="rec-price" th:text="'₹' + ${#numbers.formatDecimal(prod.price, 1, 0)}">₹0</div>
                     </div>
-                    <button th:data-id="${prod.id}" onclick="handleQuickAdd(this)" class="sugg-add-btn"><i class="fa-solid fa-plus"></i> Add to Bag</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="sfl-container" th:unless="${#lists.isEmpty(savedItems)}">
-            <div class="section-title" style="color: #666; font-size: 18px;">Saved for Later</div>
-            <div class="cart-card" th:each="item : ${savedItems}" style="background: #fffcfd; border-style: dashed;">
-                <div class="item-main-info">
-                    <div class="item-img-box" style="filter: grayscale(10%);"><img th:src="${item.imageUrl}" alt="Product Image"></div>
-                    <div class="item-details">
-                        <h4 th:text="${item.name}" style="margin: 0; color: #555;">Product Name</h4>
-                        <div class="item-size-tag">
-                            Size: <span class="size-highlight" style="background:#f5f5f5; color:#666; border-color:#ddd;" th:text="${item.size != null ? item.size : 'N/A'}">0-6M</span>
-                        </div>
-                        <div style="margin-top: 10px; display: flex; gap: 10px; align-items: center; width: 100%;">
-                            <button type="button" th:data-id="${item.id}" onclick="handleMoveToBag(this)" class="action-submit-btn" style="color: #4caf50; background: #e8f5e9; border: 1px solid #c8e6c9; flex: 1;">MOVE TO BAG</button>
-                            <button type="button" th:data-id="${item.id}" onclick="handleRemoveSaved(this)" class="action-submit-btn remove-btn" style="flex: 1;">REMOVE</button>
-                        </div>
-                    </div>
-                    <div class="item-price-box"><span class="current-price" style="color: #777;" th:text="'₹' + ${#numbers.formatDecimal(item.price, 1, 0)}">₹0</span></div>
+                    <button class="rec-btn" th:onclick="'window.location.href=\'/product/\' + ' + ${prod.id}">Select Option</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="cart-right" th:unless="${#lists.isEmpty(cartItems)}">
-        <div class="coupon-box">
-            <div class="coupon-title"><i class="fa-solid fa-tag"></i> Apply Coupon</div>
-            <div class="coupon-input-group">
-                <input type="text" id="couponCodeInput" th:value="${appliedCoupon}" class="coupon-input" placeholder="Enter Coupon (e.g. BABY10)">
-                <button type="button" onclick="applyCoupon()" class="coupon-apply-btn">Apply</button>
-            </div>
-            <div id="couponMsgDisplay" th:if="${couponMessage}" th:text="${couponMessage}" class="coupon-msg"></div>
+    <div class="cart-right">
+        <div class="card-box">
+            <h2>Apply Coupon Code</h2>
+            <form action="/cart/apply-coupon" method="post">
+                <div class="coupon-box">
+                    <input type="text" name="couponCode" class="coupon-input" placeholder="e.g. BABY10 or FREE50" th:value="${appliedCoupon}">
+                    <button type="submit" class="coupon-btn">APPLY</button>
+                </div>
+            </form>
+            <div th:if="${couponMessage != null}" style="margin-top: 10px; font-size: 12px; font-weight: bold;"
+                 th:styleappend="${#strings.contains(couponMessage, 'Successfully') || #strings.contains(couponMessage, 'Applied') ? 'color: #4caf50;' : 'color: #f44336;'}"
+                 th:text="${couponMessage}">Message</div>
         </div>
 
-        <div class="summary-card">
-            <div class="summary-title">Price Details</div>
-            <div class="price-row"><span>Bag Subtotal</span><span th:text="'₹' + ${#numbers.formatDecimal(total, 1, 0)}">₹100</span></div>
-            <div class="price-row discount" th:if="${discount > 0}"><span>Coupon Discount</span><span th:text="'-₹' + ${#numbers.formatDecimal(discount, 1, 0)}">-₹10</span></div>
+        <div class="card-box" th:if="${!#lists.isEmpty(cartItems)}">
+            <h2>Price Details</h2>
+            <div class="price-row"><span>Total Item Price</span><span th:text="'₹' + ${#numbers.formatDecimal(total, 1, 0)}">₹0</span></div>
+            <div class="price-row" th:if="${discount > 0}" style="color: #4caf50; font-weight: 500;"><span>Coupon Discount</span><span th:text="'-₹' + ${#numbers.formatDecimal(discount, 1, 0)}">-₹0</span></div>
             <div class="price-row"><span>Delivery Charges</span><span style="color: #4caf50; font-weight: bold;">FREE</span></div>
-            <div class="price-row total"><span>Order Total</span><span th:text="'₹' + ${#numbers.formatDecimal(finalTotal != null ? finalTotal : total, 1, 0)}">₹100</span></div>
+
+            <div class="price-row price-total">
+                <span>Total Amount Payable</span>
+                <span th:text="'₹' + ${#numbers.formatDecimal(finalTotal, 1, 0)}">₹0</span>
+            </div>
+
             <a href="/checkout" class="checkout-btn">PROCEED TO CHECKOUT</a>
         </div>
     </div>
 </div>
 
-<div id="shareModal" class="modal">
-    <div class="modal-content">
-        <span onclick="closeModal()" style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:24px; color:#999;">&times;</span>
-        <h3 id="modalTitle" style="color: var(--dark-pink); margin-top: 0;">Share Product</h3>
-        <img id="modalImg" src="" style="width: 100px; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; border: 1px solid #eee;">
-        <div class="share-grid">
-            <div class="share-option" onclick="shareTo('whatsapp')"><span class="share-icon">💬</span>WhatsApp</div>
-            <div class="share-option" onclick="shareTo('telegram')"><span class="share-icon">✈️</span>Telegram</div>
-            <div class="share-option" onclick="shareTo('email')"><span class="share-icon">✉️</span>Email</div>
-            <div class="share-option" onclick="copyUrl()"><span class="share-icon">🔗</span>Copy Link</div>
-        </div>
+<div class="mobile-cart-bar" th:if="${!#lists.isEmpty(cartItems)}">
+    <div class="mobile-total-box">
+        <span style="font-size: 11px; color: #777; text-transform: uppercase;">Total Amount</span>
+        <span style="font-size: 18px; font-weight: 800; color: #ad1457;" th:text="'₹' + ${#numbers.formatDecimal(finalTotal, 1, 0)}">₹0</span>
     </div>
+    <a href="/checkout" class="checkout-btn" style="width: auto; margin-top: 0; padding: 10px 22px; font-size: 13px;">PROCEED</a>
 </div>
 
-<script>
-    function handleQtyUpdate(btn, action) {
-        let id = btn.getAttribute('data-id');
-        let size = btn.getAttribute('data-size');
-        let formData = new FormData();
-        formData.append("id", id);
-        formData.append("size", size);
-        formData.append("action", action);
-
-        fetch('/cart/update', { method: 'POST', body: formData })
-            .then(() => window.location.reload());
-    }
-
-    function handleRemove(btn) {
-        let id = btn.getAttribute('data-id');
-        let formData = new FormData();
-        formData.append("id", id);
-
-        fetch('/cart/remove', { method: 'POST', body: formData })
-            .then(() => window.location.reload());
-    }
-
-    function handleSaveLater(btn) {
-        let id = btn.getAttribute('data-id');
-        let formData = new FormData();
-        formData.append("id", id);
-
-        fetch('/cart/save-for-later', { method: 'POST', body: formData })
-            .then(() => window.location.reload());
-    }
-
-    function handleMoveToBag(btn) {
-        let id = btn.getAttribute('data-id');
-        let formData = new FormData();
-        formData.append("id", id);
-
-        fetch('/cart/move-to-bag', { method: 'POST', body: formData })
-            .then(() => window.location.reload());
-    }
-
-    function handleRemoveSaved(btn) {
-        let id = btn.getAttribute('data-id');
-        let formData = new FormData();
-        formData.append("id", id);
-
-        fetch('/cart/remove-saved', { method: 'POST', body: formData })
-            .then(() => window.location.reload());
-    }
-
-    function applyCoupon() {
-        let code = document.getElementById("couponCodeInput").value;
-        let formData = new FormData();
-        formData.append("couponCode", code);
-
-        fetch('/cart/apply-coupon', { method: 'POST', body: formData })
-            .then(() => window.location.reload());
-    }
-
-    function handleQuickAdd(btn) {
-        let productId = btn.getAttribute('data-id');
-        fetch('/cart/add?id=' + productId + '&size=0-6M', { method: 'POST' })
-            .then(() => window.location.reload());
-    }
-
-    let currentProductName = "";
-    function openShare(name, img) {
-        currentProductName = name;
-        document.getElementById('modalTitle').innerText = "Share " + name;
-        document.getElementById('modalImg').src = img;
-        document.getElementById('shareModal').style.display = "block";
-    }
-    function closeModal() { document.getElementById('shareModal').style.display = "none"; }
-    function copyUrl() { navigator.clipboard.writeText(window.location.origin + "/shop"); alert("Shop Link copied!"); }
-    function shareTo(platform) {
-        const url = window.location.origin + "/shop";
-        const text = "Look at this cute dress: " + currentProductName;
-        let link = "";
-        if(platform==='whatsapp') link = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + " " + url)}`;
-        if(platform==='telegram') link = `https://t.me/share/url?url=${url}&text=${encodeURIComponent(text)}`;
-        if(platform==='email') link = `mailto:?subject=SrikariKidswear&body=${text}`;
-        if (link) window.open(link, '_blank');
-    }
-</script>
 </body>
 </html>

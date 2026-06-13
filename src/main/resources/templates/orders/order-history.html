@@ -2,91 +2,117 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>LittleStar | My Orders</title>
-    <link rel="stylesheet" th:href="@{/css/global.css}">
-    <link rel="stylesheet" th:href="@{/css/cart-checkout.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Srikari Kidswear | My Orders</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fff5f8; margin: 0; padding: 0; }
-        header { background: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fce4ec; position: sticky; top: 0; z-index: 1000; }
-        .logo-link { font-size: 22px; font-weight: 900; color: #ff6bad; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; }
-        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
-        h1 { color: #ad1457; margin-bottom: 30px; font-size: 24px; border-left: 5px solid #ff6bad; padding-left: 15px; }
-        .order-card { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid #fce4ec; }
-        .order-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #fce4ec; padding-bottom: 15px; margin-bottom: 15px; }
-        .order-id { font-weight: bold; color: #333; background: #fce4ec; padding: 4px 10px; border-radius: 6px; font-family: monospace; }
-        .status-badge { padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #fff5f8; margin: 0; padding: 0; padding-bottom: 80px; }
+
+        header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fce4ec; position: sticky; top: 0; z-index: 1000; }
+        .logo-link { font-size: 20px; font-weight: 900; color: #ff6bad; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; }
+
+        .container { max-width: 700px; margin: 20px auto; padding: 0 15px; }
+        h1 { color: #ad1457; margin-bottom: 20px; font-size: 20px; border-left: 4px solid #ff6bad; padding-left: 12px; margin-top: 10px; }
+
+        .order-card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 15px; border: 1px solid #fce4ec; }
+        .order-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #fce4ec; padding-bottom: 12px; margin-bottom: 12px; }
+        .order-id { font-weight: bold; color: #333; background: #fce4ec; padding: 4px 8px; border-radius: 5px; font-family: monospace; font-size: 13px; }
+
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
         .status-placed { background: #e3f2fd; color: #1976d2; }
         .status-shipped { background: #fff3e0; color: #f57c00; }
         .status-delivered { background: #e8f5e9; color: #4caf50; }
         .status-cancelled { background: #ffebee; color: #d32f2f; }
         .status-return { background: #f3e5f5; color: #7b1fa2; }
         .status-exchange { background: #e0f7fa; color: #00796b; }
-        .product-brief { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .product-img { width: 60px; height: 75px; object-fit: cover; border-radius: 8px; border: 1px solid #fce4ec; }
-        .action-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; padding-top: 15px; border-top: 1px solid #fafafa; }
-        .btn { padding: 10px 20px; border-radius: 25px; font-size: 13px; font-weight: bold; cursor: pointer; text-decoration: none; transition: 0.3s; border: none; display: inline-block; }
-        .btn-track { background: #ff6bad; color: white; }
+
+        .product-brief { display: flex; align-items: flex-start; gap: 15px; }
+        .product-img { width: 55px; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid #fce4ec; flex-shrink: 0; }
+        .product-info { flex: 1; min-width: 0; }
+        .cust-name { font-weight: bold; color: #333; font-size: 14px; }
+        .address-text { font-size: 12px; color: #777; margin-top: 4px; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .action-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; padding-top: 12px; border-top: 1px solid #fafafa; }
+
+        .btn { padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; text-decoration: none; transition: 0.2s; border: none; display: inline-block; text-align: center; -webkit-tap-highlight-color: transparent; }
+        .btn-track { background: #ff6bad; color: white; box-shadow: 0 3px 8px rgba(255,107,173,0.2); }
         .btn-track:hover { background: #ad1457; }
         .btn-cancel { background: #f5f5f5; color: #666; border: 1px solid #ddd; }
-        .btn-cancel:hover { background: #eeeeee; color: #333; }
-        .btn-return { border: 2px solid #ff6bad; color: #ff6bad; background: white; }
+        .btn-cancel:hover { background: #eee; }
+        .btn-return { border: 1px solid #ff6bad; color: #ff6bad; background: white; }
         .btn-return:hover { background: #fff5f8; }
-        .empty-state { text-align: center; padding: 50px; color: #999; }
+
+        .empty-state { text-align: center; padding: 60px 20px; color: #999; background: white; border-radius: 12px; border: 1px solid #fce4ec; }
+
+        /* Ajio Style Mobile Bottom Navigation Bar */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid #fce4ec; box-shadow: 0 -3px 10px rgba(0,0,0,0.04); z-index: 2000; }
+        .nav-item { text-decoration: none; color: #777; font-size: 11px; display: flex; flex-direction: column; align-items: center; font-weight: 500; -webkit-tap-highlight-color: transparent; }
+        .nav-item span { font-size: 20px; margin-bottom: 2px; }
+        .nav-item.active { color: #ff6bad; font-weight: bold; }
+
+        @media (max-width: 480px) {
+            .order-header { flex-direction: row; align-items: center; }
+            .action-group .btn { flex: 1; min-width: 100px; padding: 10px 5px; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="flex: 1;"><a href="/shop" class="logo-link">LITTLESTAR</a></div>
-    <div style="flex: 1; text-align: right;"><a href="/cart" style="text-decoration: none; font-size: 22px;">🛒</a></div>
+    <div><a href="/shop" class="logo-link">Srikari Kidswear</a></div>
+    <div><a href="/cart" style="text-decoration: none; font-size: 22px; -webkit-tap-highlight-color: transparent;">🛒</a></div>
 </header>
 
 <div class="container">
-    <h1>My Order History</h1>
+    <h1>My Orders</h1>
 
     <div class="order-card" th:if="${orderId != null}">
         <div class="order-header">
             <div>
-                <span style="color: #888; font-size: 14px;">Order</span>
                 <span class="order-id" th:text="${orderId}">BBL-ID-HERE</span>
             </div>
             <span class="status-badge"
                   th:classappend="${status == 'CANCELLED' ? 'status-cancelled' :
-                      (status == 'DELIVERED' ? 'status-delivered' :
-                      (status == 'RETURN_INITIATED' ? 'status-return' :
-                      (status == 'EXCHANGE_INITIATED' ? 'status-exchange' : 'status-placed')))}"
+                                   (status == 'DELIVERED' ? 'status-delivered' :
+                                   (status == 'RETURN_INITIATED' ? 'status-return' :
+                                   (status == 'EXCHANGE_INITIATED' ? 'status-exchange' : 'status-placed')))}"
                   th:text="${status != null ? status : 'PLACED'}">PLACED</span>
         </div>
 
         <div class="product-brief">
-            <img src="https://via.placeholder.com/60x75/ff6bad/ffffff?text=Order" class="product-img" alt="Product">
-            <div>
-                <div style="font-weight: bold; color: #333;">Order for <span th:text="${customerName}">Customer</span></div>
-                <div style="font-size: 13px; color: #777;" th:text="${deliveryAddress}">Shipping Address</div>
+            <img src="https://images.unsplash.com/photo-1519704943920-dec2a490a2ca?q=80&w=200" class="product-img" alt="Product">
+            <div class="product-info">
+                <div class="cust-name">Order for <span th:text="${customerName}">Customer</span></div>
+                <div class="address-text" th:text="${deliveryAddress}">Shipping Address</div>
             </div>
         </div>
 
         <div class="action-group">
             <a th:if="${status != 'CANCELLED'}"
                th:href="@{/order/track(orderId=${orderId})}"
-               class="btn btn-track">TRACK ORDER</a>
+               class="btn btn-track">TRACK</a>
 
-            <form th:if="${status == 'PLACED'}" action="/order/cancel" method="post" style="display:inline;">
+            <form th:if="${status == 'PLACED'}" action="/order/cancel" method="post" style="display:inline; margin:0; flex:1;">
                 <input type="hidden" name="orderId" th:value="${orderId}">
-                <button type="submit" class="btn btn-cancel">CANCEL ORDER</button>
+                <button type="submit" class="btn btn-cancel" style="width: 100%;">CANCEL</button>
             </form>
 
-            <div th:if="${status == 'DELIVERED'}" style="display: flex; gap: 10px;">
-                <a th:href="@{/order/return(orderId=${orderId})}" class="btn btn-return">RETURN</a>
-                <a th:href="@{/order/exchange(orderId=${orderId})}" class="btn btn-return">EXCHANGE</a>
+            <div th:if="${status == 'DELIVERED'}" style="display: flex; gap: 8px; width: 100%;">
+                <a th:href="@{/order/return(orderId=${orderId})}" class="btn btn-return" style="flex:1;">RETURN</a>
+                <a th:href="@{/order/exchange(orderId=${orderId})}" class="btn btn-return" style="flex:1;">EXCHANGE</a>
             </div>
         </div>
     </div>
 
     <div class="empty-state" th:if="${orderId == null}">
-        <p>You haven't placed any orders yet.</p>
-        <a href="/shop" style="color: #ff6bad; font-weight: bold; text-decoration: none;">Start Shopping</a>
+        <p style="font-size: 15px; margin-bottom: 15px;">You haven't placed any orders yet.</p>
+        <a href="/shop" style="color: #ff6bad; font-weight: bold; text-decoration: none; border: 1px solid #ff6bad; padding: 8px 20px; border-radius: 20px; display: inline-block;">Start Shopping</a>
     </div>
+</div>
+
+<div class="bottom-nav">
+    <a href="/shop" class="nav-item"><span>🏠</span>Home</a>
+    <a href="/cart" class="nav-item"><span>🛍️</span>Bag</a>
+    <a href="/order/history" class="nav-item active"><span>📦</span>Orders</a>
 </div>
 
 </body>

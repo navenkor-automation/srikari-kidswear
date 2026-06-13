@@ -109,7 +109,6 @@ public class LoginController {
         return "user-loginpage/user-login";
     }
 
-    // 🔥 4. యూజర్ "My Account" క్లిక్ చేస్తే వచ్చే ప్రొఫైల్ డ్యాష్‌బోర్డ్ రూటింగ్
     @GetMapping("/account")
     public String showAccountPage(HttpSession session, Model model) {
         String user = (String) session.getAttribute("loggedInUser");
@@ -122,11 +121,9 @@ public class LoginController {
         model.addAttribute("userEmail", session.getAttribute("userEmail"));
         model.addAttribute("userGender", session.getAttribute("userGender"));
 
-        // ఇంటెలిజె ఫోల్డర్ స్ట్రక్చర్‌కు సరిపోయేలా వ్యూ పాత్‌ని కరెక్ట్ చేశాను అన్నా
         return "user-loginpage/user-account";
     }
 
-    // 🔥 5. లౌగౌట్ లాజిక్ (Session ని క్లియర్ చేసి హోమ్ పేజీకి పంపుతుంది)
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
