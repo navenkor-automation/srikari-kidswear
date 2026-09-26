@@ -24,7 +24,7 @@ public class AdminController {
 
     @GetMapping("/login-submit")
     public String loginSubmit(@RequestParam("user") String user, @RequestParam("pass") String pass, HttpSession session) {
-        if ("admin".equalsIgnoreCase(user) && "srikari123".equals(pass)) {
+        if ("admin".equalsIgnoreCase(user) && "123".equals(pass)) {
             session.setAttribute("isLoggedIn", true);
             return "redirect:/admin/inventory";
         }

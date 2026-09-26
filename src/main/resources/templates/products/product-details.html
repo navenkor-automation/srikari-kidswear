@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Srikari Kidswear | Product Details</title>
+    <title>TinySmiles | Product Details</title>
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/product-details.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -154,7 +154,7 @@
 <body>
 
 <header>
-    <a href="/shop" class="logo-link">srikarikidswear</a>
+    <a href="/shop" class="logo-link">TinySmiles</a>
     <div class="nav-actions">
         <a href="/order/history" class="desktop-orders">My Orders</a>
 
@@ -172,7 +172,7 @@
     <div class="product-card">
         <div class="gallery-section">
             <div class="main-img-container">
-                <img id="mainDisplay" th:src="${product.imageUrl != null && product.imageUrl != '' ? product.imageUrl : 'https://via.placeholder.com/400x500?text=Srikari+Kids'}" style="width: 100%; border-radius: 15px;">
+                <img id="mainDisplay" th:src="${product.imageUrl != null && product.imageUrl != '' ? product.imageUrl : 'https://via.placeholder.com/400x500?text=TinySmiles'}" style="width: 100%; border-radius: 15px;">
             </div>
             <div class="thumb-row">
                 <img th:src="${product.imageUrl}" class="thumb-img active" onclick="swap(this)">
@@ -257,7 +257,7 @@
             <div class="slider-card-wrapper" th:each="sp : ${similarProducts}">
                 <div class="similar-card" style="margin: 0; height: 100%;">
                     <div style="height: 160px; overflow: hidden; border-radius: 8px; background: #fafafa; margin-bottom: 10px;">
-                        <img th:src="${sp.imageUrl != null && sp.imageUrl != '' ? sp.imageUrl : 'https://via.placeholder.com/200x180?text=Srikari+Kids'}"
+                        <img th:src="${sp.imageUrl != null && sp.imageUrl != '' ? sp.imageUrl : 'https://via.placeholder.com/200x180?text=TinySmiles'}"
                              style="width: 100%; height: 100%; object-fit: cover;" alt="Product Image">
                     </div>
                     <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">

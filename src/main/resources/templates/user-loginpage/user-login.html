@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Srikari Kidswear | Login</title>
+    <title>TinySmiles | Login</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #fff5f8; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         .login-card { background: white; padding: 30px 24px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.03); max-width: 420px; width: 90%; border: 1px solid #fce4ec; box-sizing: border-box; }
@@ -28,7 +28,7 @@
 
 <div class="login-card">
     <div class="logo-box">
-        <a href="/shop" class="logo-link">Srikari Kidswear</a>
+        <a href="/shop" class="logo-link">TinySmiles</a>
     </div>
 
     <div class="error-msg" th:if="${error != null}" th:text="${error}">Error Message</div>
@@ -36,7 +36,7 @@
     <form action="/login" method="post" id="mainLoginForm">
 
         <div th:if="${step == 'mobile'}">
-            <h2>Welcome to Srikari!</h2>
+            <h2>Welcome to TinySmiles!</h2>
             <input type="hidden" name="formStep" value="SUBMIT_MOBILE">
 
             <div class="input-group">

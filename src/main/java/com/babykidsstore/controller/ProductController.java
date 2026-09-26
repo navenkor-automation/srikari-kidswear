@@ -82,6 +82,28 @@ public class ProductController {
         return "redirect:/shop";
     }
 
+    // E. Get Product Details with Reviews via API (Enhanced for Automation/Postman)
+    @GetMapping("/api/retrieveProductDetails/{id}")
+    @ResponseBody
+    public java.util.Map<String, Object> getProductDetailsApi(@PathVariable("id") Long id) {
+        java.util.Map<String, Object> response = new java.util.HashMap<>();
+
+        // 1. ప్రొడక్ట్ డేటాను తెచ్చుకోవడం
+        Product product = productRepository.findById(id).orElse(null);
+
+        if (product != null) {
+            response.put("product", product);
+
+            // 2. ఆ ప్రొడక్ట్‌కి సంబంధించిన రివ్యూస్ లిస్ట్‌ను కూడా తెచ్చుకోవడం
+            List<Review> reviews = reviewRepository.findByProductId(id);
+            response.put("reviews", reviews);
+        } else {
+            response.put("message", "Product not found");
+        }
+
+        return response;
+    }
+
     // C. Add Review Logic
     @PostMapping("/api/reviews/add")
     @ResponseBody
@@ -89,5 +111,12 @@ public class ProductController {
         review.setDate(LocalDate.now().toString());
         reviewRepository.save(review);
         return "Success";
+    }
+
+    // D. Get Reviews for a specific product via API (New Endpoint for Automation/Postman)
+    @GetMapping("/api/retrieveReviewRating/product/{productId}")
+    @ResponseBody
+    public List<Review> getReviewsByProduct(@PathVariable("productId") Long productId) {
+        return reviewRepository.findByProductId(productId);
     }
 }
