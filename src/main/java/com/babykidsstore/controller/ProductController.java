@@ -26,6 +26,12 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    // 🔥 Root URL (/) కొట్టినప్పుడు ఆటోమేటిక్‌గా /shop కి పంపడానికి
+    @GetMapping("/")
+    public String redirectToShop() {
+        return "redirect:/shop";
+    }
+
  // A. Shop Page with Category Filter (Updated with Session Check for Ajio Header)
     @GetMapping("/shop")
     public String showShop(@RequestParam(required = false) String category, Model model, HttpSession session) {
